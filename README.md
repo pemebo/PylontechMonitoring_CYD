@@ -10,7 +10,7 @@ autodiscovery), an on-device TFT touchscreen, SD card logging/export and OTA fir
 
 **I ACCEPT NO RESPONSIBILITY FOR ANY DAMAGE CAUSED, PROCEED AT YOUR OWN RISK**
 
-**Español**
+**----Español----**
 
 Bifurcado (fork) de [irekzielinski/Pylontech-Battery-Monitoring](https://github.com/irekzielinski/Pylontech-Battery-Monitoring)
 (basado en la versión para ESP8266/D1 mini de [hidaba](https://github.com/hidaba) y
@@ -21,7 +21,7 @@ su puerto de consola RS-232 y expone los datos por WiFi: una interfaz web comple
 autodescubrimiento para Home Assistant), una pantalla táctil TFT en el propio dispositivo,
 registro/exportación a tarjeta SD y actualizaciones de firmware por OTA.
 
-**NO ACEPTO NINGUNA RESPONSABILIDAD POR CUALQUIER DAÑO CAUSADO. PROCEDE BAJO TU PROPIO RIESGO**
+**NO ACEPTO NINGUNA RESPONSABILIDAD POR CUALQUIER DAÑO CAUSADO. HAZLO BAJO TU PROPIO RIESGO**
 
 ## Purpose / Propósito
 
@@ -39,21 +39,21 @@ So adapting the code to the CYD would be a good exercise for me to understand th
 limitations of AI coding, and to get used to AI tools and methodologies. As a result, this project was
 created using OpenCode + Gentle AI, DeepSeek V4.1 Flash and the Big Pickle models.
 
-**Español**
+**----Español----**
 
 Hace unos meses, uno de mis módulos US3000C empezó a generar alarmas de sobretensión (Overvoltage) hacia
-el inversor. No tenía forma de ver qué estaba pasando ni cuál era el módulo problemático. Era algo
+el inversor. No tenía forma de ver qué estaba pasando ni cuál era el módulo problemático. Encontré que era algo
 difícil usar el software BatteryView para identificar el módulo y el problema. Así que cargué un ESP32
-con el código de hidaba y usé mi instancia de Home Assistant para hacer un monitoreo preciso del stack
-Pylontech. Este esquema ayudó mucho, pero me di cuenta de que:
+con el código de hidaba y usé mi instancia de Home Assistant para hacer un monitoreo preciso de la batería
+Pylontech. Este procedimiento ayudó mucho, pero me di cuenta de que:
 
 - Tenía dos pantallas CYD de sobra
-- No tenía mucha experiencia con Arduino
+- No tenía nada de experiencia con Arduino
 - Necesitaba ganar experiencia en programación asistida por IA.
 
 Así que adaptar el código al CYD sería un buen ejercicio para entender las capacidades y limitaciones de
-la programación con IA, y para acostumbrarme a las herramientas y metodologías de IA. Como resultado,
-este proyecto se creó usando OpenCode + Gentle AI, DeepSeek V4.1 Flash y los modelos Big Pickle.
+la programación con IA, así como para acostumbrarme a las herramientas y metodologías de IA. Como resultado,
+este proyecto se creó usando OpenCode + Gentle AI y los modelos DeepSeek V4.1 Flash y Big Pickle.
 
 ## Features / Características
 
@@ -77,27 +77,26 @@ este proyecto se creó usando OpenCode + Gentle AI, DeepSeek V4.1 Flash y los mo
 * MQTT support:
   * Publishes SOC, voltage, current, temperature, state, cell data, statistics, …
   * Home Assistant autodiscovery (per-module and per-cell topics)
-  * Active (publish on change) or passive mode
 * TFT display (ILI9341 240x320) with touch (XPT2046) — MAIN, MODULES, CELLS and STATUS screens,
-  dark/light theme, brightness, schedule/auto power-off and a calibration wizard
+  dark/light theme, brightness, schedule/auto power-off
 * SD card logging and CSV export of PWR, BAT and History data
 * Flash new firmware over WiFi (OTA) — no need to disconnect from the battery
 * English/Spanish interface (web UI + display), selected at runtime
 * Easy to modify code using Arduino IDE
 * Scheduled automatic reboot and double-buffered, 2-core FreeRTOS architecture
 
-**Español**
+**----Español----**
 
-* Bajo costo (unos 20–30 $ en total).
-* Interfaz web (single-page app servida desde SPIFFS) con páginas para:
-  * **Dashboard** — resumen del stack/módulo: SOC, tensión, corriente, potencia, temperatura, Delta máximo, espacio libre en la SD
+* Bajo costo (unos 20–30 € en total).
+* Interfaz web (servida desde SPIFFS) con páginas para:
+  * **Dashboard** — resumen dela batería y el CYD: SOC, tensión, corriente, potencia, temperatura, Delta máximo, espacio libre en la SD
   * **Modules** — datos por módulo (PWR/BAT/STAT)
-  * **Health** — salud y estadísticas de los módulos, incluidos los datos de celdas de hoy
-  * **Battery data** — configura los campos del parser PWR (nombre mostrado, factor, unidad), los topics MQTT y la unidad de temperatura
-  * **Cells** — tensiones de cada celda más el mínimo/máximo/delta de hoy por módulo
-  * **Statistics** — configuración del sondeo STAT (intervalo, topic MQTT) y estadísticas de la batería
-  * **Settings** — escaneo/conexión WiFi (DHCP o IP estática), NTP/zona horaria, MQTT
-  * **Screen** — ajustes de la TFT (brillo, táctil, tema, programación horaria, apagado automático, refresco)
+  * **Health** — salud y estadísticas de los módulos, incluidos los datos de hoy para las celdas
+  * **Battery data** — configura MQTT para los campos del parser PWR (nombre mostrado, factor, unidad), los topics MQTT y la unidad de temperatura
+  * **Cells** — configura MQTT para tensiones de cada celda más el mínimo/máximo/delta de hoy por módulo
+  * **Statistics** — configura MQTT para el muestreo STAT (intervalo, topic MQTT) y estadísticas de la batería
+  * **Settings** — escaneo/conexión WiFi (DHCP o IP estática), NTP/zona horaria, activación MQTT
+  * **Screen** — ajustes de la pantalla TFT (brillo, táctil, tema, programación horaria, apagado automático, refresco)
   * **Log** — visor del registro del dispositivo
   * **Data export** — exporta datos PWR/BAT/History a la tarjeta SD
   * **SD card** — explora, sube y borra archivos en la tarjeta SD
@@ -108,9 +107,8 @@ este proyecto se creó usando OpenCode + Gentle AI, DeepSeek V4.1 Flash y los mo
 * Soporte MQTT:
   * Publica SOC, tensión, corriente, temperatura, estado, datos de celdas, estadísticas, …
   * Autodescubrimiento para Home Assistant (topics por módulo y por celda)
-  * Modo activo (publica al cambiar) o pasivo
-* Pantalla TFT (ILI9341 240x320) con táctil (XPT2046) — pantallas MAIN, MODULES, CELLS y STATUS,
-  tema claro/oscuro, brillo, programación horaria/apagado automático y un asistente de calibración
+* Información en pantalla TFT (ILI9341 240x320) con táctil (XPT2046) — pantallas MAIN, MODULES, CELLS y STATUS,
+  tema claro/oscuro, brillo, programación horaria/apagado automático
 * Registro en tarjeta SD y exportación CSV de datos PWR, BAT e History
 * Actualiza el firmware por WiFi (OTA) — sin necesidad de desconectar de la batería
 * Interfaz en inglés/español (web y pantalla), seleccionable en tiempo de ejecución
@@ -120,6 +118,8 @@ este proyecto se creó usando OpenCode + Gentle AI, DeepSeek V4.1 Flash y los mo
 ## Images / Imágenes
 
 CYD screen / Pantalla del CYD
+
+3D print / impresión 3D -> https://makerworld.com/es/models/2787810-cyd-desk-buddy-for-bambu-lab-home-assistant
 
 <img width="320" height="180" alt="image" src="https://github.com/user-attachments/assets/de2246d2-b624-439d-a01d-d42c33a5e69c" /> <img width="320" height="180" alt="image" src="https://github.com/user-attachments/assets/d4eb628f-bd3e-4bb7-9e25-304aab9f2dc8" /> <img width="320" height="180" alt="image" src="https://github.com/user-attachments/assets/921083c8-5bef-46f9-b8a8-a9c7c0bf57c1" />
 
@@ -132,7 +132,7 @@ Modules details page / Página de detalles de módulos
 Health details page / Página de detalles de Health
 <img width="1037" height="534" alt="image" src="https://github.com/user-attachments/assets/393acb75-e5b5-4b34-8a6b-76abaf5b81e5" />
 
-Screen configuration page / Página de configuración de Screen
+Screen configuration page / Página de configuración de la pantalla
 <img width="1868" height="962" alt="image" src="https://github.com/user-attachments/assets/c030f42e-d3fc-4a88-96e7-111e2dc9b3b6" />
 
 Data export page / Página de exportación de datos
@@ -144,7 +144,7 @@ Console page / Página de consola
 ## Hardware needed / Hardware necesario
 
 * **ESP32 board** — the tested hardware is a "Cheap Yellow Display" (**ESP32-2432S028R**, ESP32 + 2.8"
-  ILI9341 TFT + XPT2046 touch). A plain ESP32 dev board also works (the display is then unused).
+  ILI9341 TFT + XPT2046 touch).
 * **MAX3232 / SP3232 RS-232 level converter** — the Pylontech console is RS-232 levels, **not 3V3**.
   Power it from the board's **3V3 rail** (not from a GPIO) and keep the 5 × 0.1 µF charge-pump caps.
 * **US2000B:** cable with an RJ11 connector (some RJ11 cables have only two wires — make sure you get
@@ -152,14 +152,13 @@ Console page / Página de consola
 * **US2000C / US3000C / US5000:** cable with an RJ45 connector (see below).
 * Optional: microSD card for logging/export, and a USB power supply.
 
-**Español**
+**----Español----**
 
-* **Placa ESP32** — el hardware probado es una "Cheap Yellow Display" (**ESP32-2432S028R**, ESP32 + TFT
-  ILI9341 de 2.8" + táctil XPT2046). También funciona una placa ESP32 dev normal (en ese caso la pantalla
-  no se usa).
+* **Placa ESP32** — el hardware utilizado es una "Cheap Yellow Display" (**ESP32-2432S028R**, ESP32 + TFT
+  ILI9341 de 2.8" + táctil XPT2046). 
 * **Conversor de niveles RS-232 MAX3232 / SP3232** — la consola Pylontech usa niveles RS-232, **no 3V3**.
   Aliméntalo desde el **riel de 3V3** de la placa (no desde un GPIO) y conserva los 5 capacitores de
-  bomba de carga de 0.1 µF.
+  carga de 0.1 µF.
 * **US2000B:** cable con conector RJ11 (algunos cables RJ11 traen solo dos hilos — asegúrate de conseguir
   uno con los cuatro hilos presentes).
 * **US2000C / US3000C / US5000:** cable con conector RJ45 (ver abajo).
@@ -170,7 +169,7 @@ Console page / Página de consola
 Battery console on the CYD board (**CN1** connector, defined by `BAT_RX_PIN` / `BAT_TX_PIN` in
 `PylontechMonitoring/py_uart.h`):
 
-* ESP **GPIO22** ← `R1OUT` (battery data)
+* ESP **GPIO22** ← `R1OUT`
 * ESP **GPIO27** → `T1IN`
 * Level converter powered from **3V3**, GND common with the battery
 
@@ -185,12 +184,12 @@ US2000C/US3000C/US5000 use an RJ45 plug (same schematic, different plug):
 > Do **not** use GPIO1/GPIO3 (shared with the onboard USB-UART), GPIO16/GPIO17 (RGB LED) or
 > GPIO21 (TFT backlight).
 
-**Español**
+**----Español----**
 
 Consola de la batería en la placa CYD (conector **CN1**, definido por `BAT_RX_PIN` / `BAT_TX_PIN` en
 `PylontechMonitoring/py_uart.h`):
 
-* ESP **GPIO22** ← `R1OUT` (datos de la batería)
+* ESP **GPIO22** ← `R1OUT`
 * ESP **GPIO27** → `T1IN`
 * Conversor de niveles alimentado desde **3V3**, GND común con la batería
 
@@ -200,7 +199,7 @@ Los US2000C/US3000C/US5000 usan un conector RJ45 (mismo esquema, distinto conect
 * RJ45 pin 6 (verde)        = `T1OUT`
 * RJ45 pin 8 (marrón)       = `GND`
 
-> **No** uses GPIO1/GPIO3 (compartidos con el USB-UART de la placa), GPIO16/GPIO17 (LED RGB) ni
+> **No** uses GPIO1/GPIO3 (están compartidos con el USB-UART de la placa), GPIO16/GPIO17 (LED RGB) ni
 > GPIO21 (retroiluminación de la TFT).
 
 ## Getting started / Primeros pasos
@@ -212,11 +211,11 @@ Los US2000C/US3000C/US5000 usan un conector RJ45 (mismo esquema, distinto conect
 3. Open [PylontechMonitoring/PylontechMonitoring.ino](PylontechMonitoring/PylontechMonitoring.ino).
 4. Select the partition scheme **`partitions/pylontech_ota_spiffs.csv`** (dual OTA + 512 KB SPIFFS),
    located in [`PylontechMonitoring/partitions`](PylontechMonitoring/partitions).
-5. Connect the ESP32 to the MAX3232, the MAX3232 to the RJ11/RJ45 console plug (all three lines),
-   and the plug into the battery's serial/console port (the master battery if you have several).
-6. Flash and power the ESP32 via USB.
-7. Connect to the WiFi AP `pylontech-xxxx`, browse `192.168.4.1/filemanager` and upload **all** files
+5. Flash and power the ESP32 via USB.
+6. Connect to the WiFi AP `pylontech-xxxx`, browse `192.168.4.1/filemanager` and upload **all** files
    from the [`PylontechMonitoring/data`](PylontechMonitoring/data) folder to SPIFFS.
+7. Connect the ESP32 to the MAX3232, the MAX3232 to the RJ11/RJ45 console plug (all three lines),
+   and the plug into the battery's serial/console port (the master battery if you have several).
 8. Browse `http://192.168.4.1` → *Settings* → scan for WiFi and connect to your network.
    The AP switches off ~30 s after connecting (after a refresh you can see the ESP's IP address).
 9. Optional: configure MQTT on the *Settings* page. `MQTT` = topic prefix, `Send` = Home Assistant
@@ -230,7 +229,7 @@ Configuration pages and values are password protected. Default values are:
 **Careful with OTA:** only flash the `.bin` produced by a fresh build (see below). Never flash an old
 artifact left over from a previous build — it silently downgrades the device.
 
-**Español**
+**----Español----**
 
 1. Instala el [Arduino IDE](https://www.arduino.cc/en/software) más el soporte para placas ESP32.
 2. Copia el contenido del subdirectorio
@@ -239,11 +238,11 @@ artifact left over from a previous build — it silently downgrades the device.
 3. Abre [PylontechMonitoring/PylontechMonitoring.ino](PylontechMonitoring/PylontechMonitoring.ino).
 4. Selecciona el esquema de particiones **`partitions/pylontech_ota_spiffs.csv`** (OTA dual + 512 KB de
    SPIFFS), ubicado en [`PylontechMonitoring/partitions`](PylontechMonitoring/partitions).
-5. Conecta el ESP32 al MAX3232, el MAX3232 al conector RJ11/RJ45 de consola (las tres líneas) y el
-   conector al puerto serie/consola de la batería (la batería maestra si tienes varias).
-6. Flashea y alimenta el ESP32 por USB.
-7. Conéctate al AP WiFi `pylontech-xxxx`, entra a `192.168.4.1/filemanager` y sube **todos** los archivos
+5. Flashea y alimenta el ESP32 por USB.
+6. Conéctate al AP WiFi `pylontech-xxxx`, entra a `192.168.4.1/filemanager` y sube **todos** los archivos
    de la carpeta [`PylontechMonitoring/data`](PylontechMonitoring/data) a SPIFFS.
+7. Conecta el ESP32 al MAX3232, el MAX3232 al conector RJ11/RJ45 de consola (las tres líneas) y el
+   conector al puerto serie/consola de la batería (la batería maestra si tienes varias).
 8. Entra a `http://192.168.4.1` → *Settings* → escanea y conéctate a tu red.
    El AP se apaga ~30 s después de conectar (tras refrescar puedes ver la IP del ESP).
 9. Opcional: configura MQTT en la página *Settings*. `MQTT` = prefijo del topic, `Send` =
@@ -255,7 +254,7 @@ Las páginas y valores de configuración están protegidos por contraseña. Los 
 * contraseña → `12345`
 
 **Cuidado con el OTA:** flashea solo el `.bin` producido por una compilación reciente (ver abajo). Nunca
-flashees un artefacto viejo de una compilación anterior — degrada el dispositivo en silencio.
+flashees un artefacto viejo de una compilación anterior — degrada el dispositivo.
 
 ### Build from the command line (arduino-cli) / Compilar desde la línea de comandos (arduino-cli)
 
@@ -269,7 +268,7 @@ arduino-cli compile --fqbn esp32:esp32:esp32 \
 The image lands in `~/.cache/arduino/sketches/<hash>/PylontechMonitoring.ino.bin`. Upload it through
 the web UI (*Update* page) or via `POST /api/ota`.
 
-**Español**
+**----Español----**
 
 La imagen resultante queda en `~/.cache/arduino/sketches/<hash>/PylontechMonitoring.ino.bin`. Súbela a
 través de la interfaz web (página *Update*) o vía `POST /api/ota`.
@@ -280,14 +279,14 @@ través de la interfaz web (página *Update*) o vía `POST /api/ota`.
 | --- | --- |
 | 1× short press | Enable a temporary WiFi AP (5 min, AP+STA — your home WiFi stays connected) |
 | ≥5 s hold | Reset WiFi credentials (drops to AP only) |
-| 5× short press | Reset WiFi credentials (same action) |
+| 5× short press | Reset WiFi credentials (same as above)|
 | 15 s hold | Factory reset (clears all NVS + reboot) |
 
 | Acción | Efecto |
 | --- | --- |
-| 1 pulsación corta | Activa un AP WiFi temporal (5 min, AP+STA — tu WiFi de casa sigue conectado) |
+| 1 pulsación corta | Activa un AP WiFi temporal (5 min, AP+STA — tu WiFi de casa sigue conectada) |
 | Mantener ≥5 s | Resetea las credenciales WiFi (cae a modo AP únicamente) |
-| 5 pulsaciones cortas | Resetea las credenciales WiFi (misma acción) |
+| 5 pulsaciones cortas | Resetea las credenciales WiFi (igual que el anterior)|
 | Mantener 15 s | Restablecimiento de fábrica (borra toda la NVS + reinicio) |
 
 ## Configuration / Configuración
@@ -301,7 +300,7 @@ Everything is stored in **ESP32 NVS** (no config files) and edited from the web 
 The scheduler polls the battery (`pwr` / `bat` / `stat`) at configurable intervals (defaults: 60 s /
 5 min / 30 min). BAT and STAT parsers can be enabled/disabled individually.
 
-**Español**
+**----Español----**
 
 Todo se guarda en la **NVS del ESP32** (sin archivos de configuración) y se edita desde la interfaz web:
 
@@ -339,7 +338,7 @@ PylontechMonitoring/
 └── libraries/                vendored Arduino libraries
 ```
 
-**Español**
+**----Español----**
 
 Dos tareas FreeRTOS, `loop()` está vacío a propósito:
 
@@ -374,7 +373,7 @@ PylontechMonitoring/
 * Battery modes: **STACK** (daisy-chain) or **HUB** (with hub/Masterhub addressing)
 * Cell diff warnings: 100 mV (warn) / 150 mV (error) — configurable
 
-**Español**
+**----Español----**
 
 * **PWR** — datos de potencia: tensión, corriente, temperatura, SOC por módulo
 * **BAT** — datos de celdas: tensiones individuales de cada celda (Vlow, Vhigh, Vdiff)
@@ -385,14 +384,13 @@ PylontechMonitoring/
 ## i18n
 
 Every new/changed web UI string ships in **both** English and Spanish
-(`data/static_i18n.js`, identical key sets). Server responses and log messages stay English and are
-translated client-side only for display.
+(`data/static_i18n.js`, identical key sets). Server responses and log messages stay English.
 
-**Español**
+**----Español----**
 
-Cada cadena nueva o modificada de la interfaz web se entrega **en inglés y en español**
+Cada texto nuevo o modificado de la interfaz web se entrega **en inglés y en español**
 (`data/static_i18n.js`, con conjuntos de claves idénticos). Las respuestas del servidor y los mensajes
-de log permanecen en inglés y se traducen solo del lado del cliente para mostrarlos.
+de log permanecen en inglés.
 
 ## Credits / Créditos
 
@@ -400,7 +398,7 @@ de log permanecen en inglés y se traducen solo del lado del cliente para mostra
 * ESP8266/D1 mini port: [hidaba](https://github.com/hidaba)
 * ESP32 port: [HeldvomForst](https://github.com/HeldvomForst)
 
-**Español**
+**----Español----**
 
 * Proyecto original: [irekzielinski/Pylontech-Battery-Monitoring](https://github.com/irekzielinski/Pylontech-Battery-Monitoring)
 * Puerto para ESP8266/D1 mini: [hidaba](https://github.com/hidaba)
