@@ -1,0 +1,227 @@
+<h2 data-i18n="upd.title">Firmware update</h2>
+
+<div id="fdupdate">
+
+<div class="box">
+    <p><span data-i18n="upd.current_version">Current firmware version:</span> <b id="fwver">...</b></p>
+
+    <p data-i18n-html="upd.select_file_html">Please select a <b>.bin</b> firmware file:</p>
+
+    <input type="file" id="fw">
+    <br><br>
+    <button onclick="upload()" data-i18n="upd.flash">Flash</button>
+
+    <br><br>
+    <progress id="prog" value="0" max="100"></progress>
+    <div id="status"></div>
+</div>
+
+<h3 data-i18n="upd.system_actions">System Actions</h3>
+
+<div class="box">
+    <button onclick="restartESP()" data-i18n="upd.restart_esp">Restart ESP</button>
+    <br><br>
+    <button onclick="wifiReset()" data-i18n="upd.wifi_reset">WiFi Reset</button>
+    <br><br>
+    <button onclick="factoryReset()" data-i18n="upd.factory_reset">Factory Reset</button>
+</div>
+
+<h3 data-i18n="upd.storage_info">Storage Information</h3>
+
+<div class="box">
+<table>
+<tr>
+  <td data-i18n="upd.spiffs_total">SPIFFS Total:</td>
+  <td>
+    <span id="spiffs_total">...</span><br>
+    <small id="spiffs_total_pct"></small>
+  </td>
+</tr>
+<tr>
+  <td data-i18n="upd.spiffs_used">SPIFFS Used:</td>
+  <td>
+    <span id="spiffs_used">...</span><br>
+    <small id="spiffs_used_pct"></small>
+  </td>
+</tr>
+<tr>
+  <td data-i18n="upd.spiffs_free">SPIFFS Free:</td>
+  <td>
+    <span id="spiffs_free">...</span><br>
+    <small id="spiffs_free_pct"></small>
+  </td>
+</tr>
+
+<tr>
+  <td data-i18n="upd.nvs_total">NVS Total:</td>
+  <td>
+    <span id="nvs_total">...</span><br>
+    <small id="nvs_total_pct"></small>
+  </td>
+</tr>
+<tr>
+  <td data-i18n="upd.nvs_used">NVS Used:</td>
+  <td>
+    <span id="nvs_used">...</span><br>
+    <small id="nvs_used_pct"></small>
+  </td>
+</tr>
+<tr>
+  <td data-i18n="upd.nvs_free">NVS Free:</td>
+  <td>
+    <span id="nvs_free">...</span><br>
+    <small id="nvs_free_pct"></small>
+  </td>
+</tr>
+</table>
+</div>
+
+<style>
+#fdupdate button { padding: 8px 16px; margin-top: 10px; }
+#status { margin-top: 15px; font-weight: bold; }
+#fdupdate progress { width: 300px; display: none; }
+</style>
+
+<script>
+// ------------------------------------------------------------
+// Load firmware version from ESP
+// ------------------------------------------------------------
+fetch("/api/version")
+    .then(r => r.text())
+    .then(v => {
+        document.getElementById("fwver").innerText = v;
+    });
+
+// ------------------------------------------------------------
+// OTA Upload (multipart/form-data!)
+// ------------------------------------------------------------
+function upload() {
+    let file = document.getElementById("fw").files[0];
+    if (!file) {
+        alert(t("upd.alert_select_bin"));
+        return;
+    }
+
+    let prog = document.getElementById("prog");
+    let status = document.getElementById("status");
+
+    prog.style.display = "block";
+    prog.value = 0;
+    status.innerText = t("upd.uploading");
+
+    // Create multipart FormData
+    let formData = new FormData();
+    formData.append("fw", file);
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/ota");
+
+    xhr.upload.onprogress = function(e) {
+        if (e.lengthComputable) {
+            let p = Math.round((e.loaded / e.total) * 100);
+            prog.value = p;
+            status.innerText = t("upd.upload_progress").replace("{p}", p);
+        }
+    };
+
+    xhr.onload = function() {
+        if (xhr.status == 200) {
+            status.innerText = t("upd.update_success");
+            prog.value = 100;
+
+            setTimeout(() => {
+                location.reload();
+            }, 5000);
+        } else {
+            status.innerText = t("upd.error_prefix") + xhr.responseText;
+        }
+    };
+
+    xhr.send(formData);
+}
+
+// ---------------------------------------------
+// ESP Restart
+// ---------------------------------------------
+function restartESP() {
+    if (!confirm(t("upd.confirm_restart"))) return;
+
+    fetch("/api/restart", { method: "POST" })
+        .then(() => {
+            alert(t("upd.restarting"));
+        });
+}
+
+// ---------------------------------------------
+// WiFi Reset
+// ---------------------------------------------
+function wifiReset() {
+    if (!confirm(t("upd.confirm_wifi_reset"))) return;
+
+    fetch("/api/wifireset", { method: "POST" })
+        .then(() => {
+            alert(t("upd.wifi_reset_done"));
+        });
+}
+
+// ---------------------------------------------
+// Factory Reset
+// ---------------------------------------------
+function factoryReset() {
+    if (!confirm(t("upd.confirm_factory_reset"))) return;
+
+    fetch("/api/factoryreset", { method: "POST" })
+        .then(() => {
+            alert(t("upd.factory_reset_done"));
+        });
+}
+
+// -------------------------------------------------------------
+// Load storage info
+// -------------------------------------------------------------
+fetch("/api/storageinfo")
+  .then(r => r.json())
+  .then(info => {
+
+    // setText: tolerate a missing element so one absent id cannot abort the
+    // whole storage render chain (matches the null-guards used elsewhere).
+    const setText = (id, text) => {
+      const el = document.getElementById(id);
+      if (el) el.innerText = text;
+    };
+
+    // --- SPIFFS ---
+    setText("spiffs_total", info.spiffs_total + t("upd.bytes"));
+    setText("spiffs_used",  info.spiffs_used  + t("upd.bytes"));
+    setText("spiffs_free",  info.spiffs_free  + t("upd.bytes"));
+
+    let spiffs_total = info.spiffs_total;
+    let spiffs_used  = info.spiffs_used;
+    let spiffs_free  = info.spiffs_free;
+
+    setText("spiffs_total_pct",
+        Math.round((spiffs_total / spiffs_total) * 100) + t("upd.pct_of_100"));
+    setText("spiffs_used_pct",
+        Math.round((spiffs_used / spiffs_total) * 100) + t("upd.pct_used"));
+    setText("spiffs_free_pct",
+        Math.round((spiffs_free / spiffs_total) * 100) + t("upd.pct_free"));
+
+    // --- NVS ---
+    setText("nvs_total", info.nvs_total + t("upd.entries"));
+    setText("nvs_used",  info.nvs_used  + t("upd.entries"));
+    setText("nvs_free",  info.nvs_free  + t("upd.entries"));
+
+    let nvs_total = info.nvs_total;
+    let nvs_used  = info.nvs_used;
+    let nvs_free  = info.nvs_free;
+
+    setText("nvs_total_pct",
+        Math.round((nvs_total / nvs_total) * 100) + t("upd.pct_of_100"));
+    setText("nvs_used_pct",
+        Math.round((nvs_used / nvs_total) * 100) + t("upd.pct_used"));
+    setText("nvs_free_pct",
+        Math.round((nvs_free / nvs_total) * 100) + t("upd.pct_free"));
+  });
+</script>
+
+</div>

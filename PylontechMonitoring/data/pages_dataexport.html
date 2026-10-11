@@ -1,0 +1,130 @@
+<div class="content">
+
+<h2 data-i18n="exp.title">Data export</h2>
+
+<!-- No storage banner -->
+<div id="no_storage_banner" class="alert" style="display:none; background:#ffcccc; border:1px solid #cc0000; padding:12px; margin-bottom:16px; border-radius:4px;" data-i18n-html="exp.no_storage_html">
+    <strong>No storage available</strong> — SD card not mounted or not formatted as FAT32.
+</div>
+
+<!-- Battery data export -->
+<div class="conn-box">
+    <div class="conn-header" data-i18n="exp.battery_export">Battery data export</div>
+    <div class="conn-body">
+
+        <p style="font-size:14px; margin:0 0 12px 0;" data-i18n="exp.intro">
+            Select what to export. Module data and Cells data can run together in one export,
+            inside the From/To window (From empty = start now, To empty = until stopped).
+            The Export timeout only applies to the History export.
+        </p>
+
+        <div id="data_select_options" class="conn-grid-2">
+            <label>
+                <input id="sel_pwr" type="checkbox">
+                <span data-i18n="exp.module_data">Module data</span>
+            </label>
+            <label>
+                <input id="sel_bat" type="checkbox">
+                <span data-i18n="exp.cells_data">Cells data</span>
+            </label>
+        </div>
+
+        <div id="data_time_options" style="margin-top:12px;">
+            <label><span data-i18n="exp.from_optional">From (optional — start)</span><br>
+                <input id="data_time_from" type="datetime-local" data-export-option="data">
+            </label>
+            <br><br>
+            <label><span data-i18n="exp.to_optional">To (optional — end)</span><br>
+                <input id="data_time_to" type="datetime-local" data-export-option="data">
+            </label>
+            <br><br>
+            <label><span data-i18n="exp.modules_label">Modules (comma-separated, empty = all)</span><br>
+                <input id="data_modules" type="text" placeholder="e.g. 1,2,3" data-i18n-ph="exp.modules_placeholder" data-export-option="data">
+            </label>
+            <br><br>
+            <label><span data-i18n="exp.records_per_file">Records per file (100–100000)</span><br>
+                <input id="sd_records_per_file" type="number" min="100" max="100000" step="100" data-export-option="data">
+            </label>
+        </div>
+
+        <div id="bat_export_warning" style="display:none; color:#cc0000; font-size:12px; margin-top:8px;" data-i18n="exp.bat_warning">
+            Cells data must be enabled on the Cells page
+        </div>
+
+        <div style="margin-top:12px;">
+            <button id="btn_data_export" onclick="toggleExport('data')" class="export-btn" data-export-kind="data" data-i18n="exp.export_btn">Export</button>
+        </div>
+
+        <div id="active_export_hint" style="display:none; font-size:13px; margin-top:12px; padding:8px; background:#fff4d6; border:1px solid #e0b400; border-radius:4px;">
+            <strong data-i18n="exp.export_running">Export running:</strong> <span id="active_export_kind">—</span> <span data-i18n="exp.options_locked">— options are locked until it is stopped.</span>
+        </div>
+
+        <div id="query_interval_info" style="font-size:13px; color:#555; margin-top:12px; padding:8px; background:#f0f0f0; border-radius:4px;" data-i18n="exp.query_interval_default">
+            Note: Module data / Cells data exports use the query interval configured in Battery data / Cells pages.
+        </div>
+    </div>
+</div>
+
+<!-- BMS data export -->
+<div class="conn-box">
+    <div class="conn-header" data-i18n="exp.bms_export">BMS data export</div>
+    <div class="conn-body">
+
+        <p style="font-size:14px; margin:0 0 12px 0;" data-i18n="exp.history_intro">
+            History writes the battery's datalist response verbatim, for one module.
+            It starts immediately and has no time range.
+        </p>
+
+        <label><span data-i18n="exp.module_number">Module number</span><br>
+            <input id="module_number" type="number" min="1" max="80" value="1" data-export-option="module">
+        </label>
+        <br><br>
+        <label><span data-i18n="exp.export_timeout">Export timeout (s) (60–3600)</span><br>
+            <input id="sd_export_timeout" type="number" min="60" max="3600" step="1" data-export-option="module">
+        </label>
+
+        <div class="conn-grid-2" style="margin-top:12px;">
+            <button id="btn_history_export" onclick="toggleExport('history')" class="export-btn" data-export-kind="history" data-i18n="exp.history_btn">History</button>
+        </div>
+    </div>
+</div>
+
+<!-- Progress section -->
+<div id="progress_section" class="conn-box" style="display:none;">
+    <div class="conn-header" data-i18n="exp.progress_title">Export Progress</div>
+    <div class="conn-body">
+        <div id="progress_status" style="margin-bottom:8px;"><span data-i18n="exp.status_label">Status:</span> <span id="progress_state">—</span></div>
+        <div id="progress_type" style="margin-bottom:8px;"><span data-i18n="exp.exporting_label">Exporting:</span> <span id="progress_kinds">—</span></div>
+        <div id="progress_files" style="margin-bottom:8px;"><span data-i18n="exp.files_created">Files created:</span> <span id="progress_file_count">0</span></div>
+        <div id="progress_records" style="margin-bottom:8px;"><span data-i18n="exp.records_current">Records in current file:</span> <span id="progress_record_count">0</span></div>
+        <div id="progress_current_file" style="margin-bottom:8px; word-break:break-all;"><span data-i18n="exp.current_file">Current file:</span> <span id="progress_filename">—</span></div>
+        <div id="progress_error" style="display:none; color:#cc0000; margin-bottom:8px;"><span data-i18n="exp.error_label">Error:</span> <span id="progress_error_text">—</span></div>
+        <div style="margin-top:12px; font-size:13px; color:#555;" data-i18n="exp.stop_hint">
+            Stop the export with the button of the running export kind.
+        </div>
+    </div>
+</div>
+
+<!-- Info -->
+<div class="conn-box">
+    <div class="conn-header" data-i18n="exp.info_title">Info</div>
+    <div class="conn-body">
+        <p style="font-size:14px; margin:0;" data-i18n="exp.info_p1">
+            Module data and Cells data exports write one CSV file per module and rotate to
+            the next file when the configured records per file is reached. Running both
+            together keeps the module data and the cells data files of a module side by side.
+            Rows are recorded live and only inside the selected From/To window: From empty
+            starts now, To empty runs until stopped. There is no backfill.
+        </p>
+        <p style="font-size:14px; margin:8px 0 0;" data-i18n="exp.info_p3">
+            History exports write the battery's datalist response verbatim, without added headers.
+        </p>
+        <p style="font-size:14px; margin:8px 0 0;" data-i18n="exp.info_p4">
+            Only one export can run at a time.
+        </p>
+    </div>
+</div>
+
+</div>
+
+<script src="/static_dataexport.js?v=3"></script>

@@ -1,0 +1,252 @@
+<h2 data-i18n="conn.settings">Settings</h2>
+
+<!-- LANGUAGE --------------------------------------------------------- -->
+<div class="conn-box">
+    <div class="conn-header" data-i18n="conn.language">Language</div>
+    <div class="conn-body">
+
+        <select id="lang_select">
+            <option value="en">English</option>
+            <option value="es">Español</option>
+        </select>
+
+        <button class="btn-save" onclick="languageSave()" data-i18n="conn.save">Save</button>
+
+        <div id="lang_msg" class="msg"></div>
+    </div>
+</div>
+
+
+<!-- WIFI ------------------------------------------------------------ -->
+<div class="conn-box wifi-box">
+    <div class="conn-header wifi-header" data-i18n="conn.wifi">WiFi</div>
+    <div class="conn-body">
+
+        <div id="wifi_status" data-i18n="conn.wifi_loading">Loading WiFi status…</div>
+
+        <button id="wifi_toggle_btn" class="btn-save" onclick="wifiToggle()" data-i18n="conn.wifi_disable">Disable WiFi</button>
+        <div style="font-size:12px; color:#ccc; margin-top:4px;" data-i18n="conn.wifi_boot_hint">
+            Press the Boot button of the device to re-enable the WiFi
+        </div>
+
+        <button onclick="wifiScan()" data-i18n="conn.wifi_scan">Scan</button>
+
+        <div id="wifi_scanlist"></div>
+
+        <label><input type="checkbox" id="wifi_manual" onchange="wifiToggleManual()"> <span data-i18n="conn.wifi_manual">Manual Mode</span></label>
+
+        <div id="wifi_manual_box" style="display:none;">
+            <table>
+                <tr><td data-i18n="conn.wifi_ssid">SSID:</td><td><input id="wifi_ssid" type="text"></td></tr>
+                <tr><td data-i18n="conn.password">Password:</td><td><input id="wifi_pass" type="password"></td></tr>
+                <tr><td></td><td><button onclick="wifiConnect()" data-i18n="conn.connect">Connect</button></td></tr>
+            </table>
+        </div>
+
+        <div id="wifi_msg" class="msg"></div>
+    </div>
+</div>
+
+
+<!-- MQTT ------------------------------------------------------------ -->
+<div class="conn-box mqtt-box">
+    <div class="conn-header mqtt-header" data-i18n="conn.mqtt">MQTT</div>
+    <div class="conn-body">
+
+        <table class="conn-table">
+            <tr>
+                <td data-i18n="conn.mqtt_enabled">Enabled:</td>
+                <td><input type="checkbox" id="mqtt_enabled"></td>
+            </tr>
+
+            <tr>
+                <td data-i18n="conn.server">Server:</td>
+                <td><input type="text" id="mqtt_server"></td>
+            </tr>
+
+            <tr>
+                <td data-i18n="conn.port">Port:</td>
+                <td><input type="number" id="mqtt_port"></td>
+            </tr>
+
+            <tr>
+                <td data-i18n="conn.user">User:</td>
+                <td><input type="text" id="mqtt_user"></td>
+            </tr>
+
+            <tr>
+                <td data-i18n="conn.password">Password:</td>
+                <td><input type="password" id="mqtt_pass"></td>
+            </tr>
+
+            <tr>
+                <td data-i18n="conn.mqtt_topic_prefix">Topic Prefix:</td>
+                <td><input type="text" id="mqtt_topic"></td>
+            </tr>
+        </table>
+
+        <button class="btn-save" onclick="mqttSave()" data-i18n="conn.save">Save</button>
+
+        <div id="mqtt_msg" class="msg"></div>
+    </div>
+</div>
+
+
+<!-- NTP / TIME ------------------------------------------------------ -->
+<div class="conn-box ntp-box">
+    <div class="conn-header ntp-header" data-i18n="conn.ntp_time">NTP / Time</div>
+    <div class="conn-body">
+
+        <!-- 3 Modes -->
+        <label><input type="checkbox" id="ntp_gateway" onchange="ntpModeSelect('gateway')"> <span data-i18n="conn.use_gateway_ntp">Use gateway NTP</span></label><br>
+        <label><input type="checkbox" id="ntp_manual" onchange="ntpModeSelect('manual')"> <span data-i18n="conn.manual_ntp">Manual NTP server</span></label><br>
+        <label><input type="checkbox" id="time_manual" onchange="ntpModeSelect('time')"> <span data-i18n="conn.manual_time">Manual time</span></label>
+
+        <!-- Manual NTP -->
+        <div id="ntp_manual_box" style="display:none; margin-top:10px;">
+            <table class="conn-table">
+                <tr>
+                    <td data-i18n="conn.ntp_server">NTP Server:</td>
+                    <td><input type="text" id="ntp_server" value="pool.ntp.org"></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Manual Time -->
+        <div id="time_manual_box" style="display:none; margin-top:10px;">
+            <table class="conn-table">
+                <tr><td data-i18n="conn.date">Date:</td><td><input type="date" id="time_date"></td></tr>
+                <tr><td data-i18n="conn.time">Time:</td><td><input type="time" id="time_time"></td></tr>
+            </table>
+        </div>
+
+        <!-- Timezone -->
+         <h4 data-i18n="conn.timezone">Timezone</h4>
+         <table class="conn-table">
+             <tr>
+                 <td data-i18n="conn.region">Region:</td>
+                 <td><select id="tz_region" onchange="tzRegionChanged()"></select></td>
+             </tr>
+             <tr>
+                 <td data-i18n="conn.city">City:</td>
+                 <td><select id="tz_city" onchange="tzCityChanged()"></select></td>
+             </tr>
+         </table>
+
+        <!-- Hidden full timezone -->
+        <input type="hidden" id="tz_full">
+
+        <!-- Save -->
+        <button class="btn-save" onclick="timeSave()" data-i18n="conn.save">Save</button>
+        <div id="time_msg" class="msg"></div>
+
+		<!-- Current Server -->
+        <h4 data-i18n="conn.server_heading">Server</h4>
+        <div id="ntp_current">–</div>
+
+    </div>
+</div>
+
+
+
+<!-- IP CONFIG ------------------------------------------------------- -->
+<div class="conn-box ip-box">
+    <div class="conn-header ip-header" data-i18n="conn.ip_config">IP Configuration</div>
+    <div class="conn-body">
+
+        <label>
+            <input type="checkbox" id="ip_dhcp" onchange="ipToggleDhcp()">
+            <span data-i18n="conn.dhcp">DHCP</span>
+        </label>
+
+        <div id="ip_static_box" style="display:none; margin-top:10px;">
+            <table class="conn-table">
+                <tr>
+                    <td data-i18n="conn.ip_address">IP Address:</td>
+                    <td><input type="text" id="ip_addr"></td>
+                </tr>
+                <tr>
+                    <td data-i18n="conn.subnet_mask">Subnet Mask:</td>
+                    <td><input type="text" id="ip_mask"></td>
+                </tr>
+                <tr>
+                    <td data-i18n="conn.gateway">Gateway:</td>
+                    <td><input type="text" id="ip_gw"></td>
+                </tr>
+                <tr>
+                    <td data-i18n="conn.dns">DNS:</td>
+                    <td><input type="text" id="ip_dns"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div style="margin-top:10px;">
+            <button class="btn-save" onclick="ipSave()" data-i18n="conn.save">Save</button>
+        </div>
+        <div id="ip_msg" class="msg"></div>
+
+    </div>
+</div>
+
+
+<!-- AUTOMATIC RESTART -------------------------------------------------- -->
+<div class="conn-box">
+    <div class="conn-header restart-header" data-i18n="conn.automatic_restart">Automatic restart</div>
+    <div class="conn-body">
+
+        <label>
+            <input type="checkbox" id="rbt_enabled">
+            <span data-i18n="conn.automatic_reboot">Automatic reboot</span>
+        </label>
+
+        <table class="conn-table">
+            <tr>
+                <td data-i18n="conn.reboot_time">Reboot time:</td>
+                <td><input type="time" id="rbt_time"></td>
+            </tr>
+            <tr>
+                <td data-i18n="conn.reboot_every">Reboot every:</td>
+                <td><input type="number" id="rbt_days" min="1" max="365"> <span data-i18n="conn.days">day(s)</span></td>
+            </tr>
+        </table>
+
+        <button class="btn-save" onclick="restartSave()" data-i18n="conn.save">Save</button>
+
+        <div style="font-size:12px; color:#ccc; margin-top:4px;" data-i18n="conn.restart_hint">
+            Reboots at the configured time every N days. Requires a valid
+            system time (NTP or manual). Default: daily at 03:00.
+        </div>
+
+        <div id="restart_msg" class="msg"></div>
+
+    </div>
+</div>
+
+
+<!-- CONFIG PASSWORD -------------------------------------------------- -->
+<div class="conn-box">
+    <div class="conn-header lock-header" data-i18n="conn.config_password">Config password</div>
+    <div class="conn-body">
+
+        <table class="conn-table">
+            <tr>
+                <td data-i18n="conn.password">Password:</td>
+                <td><input type="password" id="cfg_password" maxlength="20"
+                           pattern="[A-Za-z0-9]{0,20}" autocomplete="off"></td>
+            </tr>
+        </table>
+
+        <div style="font-size:12px; color:#ccc; margin-top:4px;" data-i18n="conn.password_hint">
+            Required to access all pages except Dashboard and Log. Max. 20
+            alphanumeric characters. Leave blank to keep the current password.
+            Default: 12345.
+        </div>
+
+        <button class="btn-save" onclick="passwordSave()" data-i18n="conn.save">Save</button>
+        <div id="password_msg" class="msg"></div>
+
+    </div>
+</div>
+
+
+<script src="/static_connection.js?v=3"></script>

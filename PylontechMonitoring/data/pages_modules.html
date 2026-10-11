@@ -1,0 +1,77 @@
+<div class="card">
+    <h2 data-i18n="mod.stack_title">Modules stack</h2>
+    <div id="modules_header" class="card" style="padding:10px; font-weight:bold;"></div>
+</div>
+
+<div class="card" style="margin-top:20px;">
+    <h2 data-i18n="mod.modules">Modules</h2>
+    <table class="conn-table" id="modules_table">
+        <thead>
+            <tr>
+                <th data-i18n="mod.module">Module</th>
+                <th data-i18n="mod.status">Status</th>
+                <th data-i18n="mod.soc">SOC</th>
+                <th data-i18n="mod.voltage">Voltage</th>
+                <th data-i18n="mod.current">Current</th>
+                <th data-i18n="mod.temperature">Temperature</th>
+                <th data-i18n="mod.cell_delta">Cell Delta</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div class="card" style="margin-top:20px;">
+    <h2 data-i18n="mod.statistics">Statistics</h2>
+    <div id="statistics_header" style="padding:8px 0;"></div>
+
+    <p style="margin:6px 0 10px; font-size:13px; color:#616161;"
+       data-i18n-html="mod.legend_stats">
+        SOH: State of Health &middot; OV: Overvoltage count &middot; HV: High voltage count &middot;
+        LV: Low voltage count &middot; UV: Undervoltage count
+    </p>
+
+    <table class="conn-table" id="stats_table">
+        <thead>
+            <tr>
+                <th data-i18n="mod.module">Module</th>
+                <th data-i18n="mod.soh">SOH</th>
+                <th data-i18n="mod.cycles">Cycles</th>
+                <th data-i18n="mod.total_discharged">Total discharged</th>
+                <th data-i18n="mod.ov">OV</th>
+                <th data-i18n="mod.hv">HV</th>
+                <th data-i18n="mod.lv">LV</th>
+                <th data-i18n="mod.uv">UV</th>
+                <th data-i18n="mod.bms_warnings">BMS warnings</th>
+                <th data-i18n="mod.bms_alarms">BMS alarms</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div class="card" style="margin-top:20px;">
+    <h2 data-i18n="mod.cell_voltages">Cell voltages</h2>
+    <div id="cell_header" style="padding:8px 0;"></div>
+
+    <p style="margin:6px 0 10px; font-size:13px; color:#616161;"
+       data-i18n-html="mod.legend_voltage">
+        <span style="color:#ff0000; font-weight:bold;">Red</span> = highest cell of the module &middot;
+        <span style="color:#0000ff; font-weight:bold;">Blue</span> = lowest cell of the module
+    </p>
+
+    <table class="conn-table" id="cell_volt_table">
+        <thead></thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div class="card" style="margin-top:20px;">
+    <h2 data-i18n="mod.cell_socs">Cell SOCs</h2>
+    <table class="conn-table" id="cell_soc_table">
+        <thead></thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script src="/static_modules.js?v=3"></script>

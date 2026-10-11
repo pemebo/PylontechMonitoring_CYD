@@ -1,0 +1,95 @@
+<h2 data-i18n="screen.title">Screen</h2>
+
+<!-- DISPLAY --------------------------------------------------------- -->
+<div class="conn-box">
+    <div class="conn-header screen-header" data-i18n="screen.display">Display</div>
+    <div class="conn-body scr-page" id="scr_disp_body">
+
+        <table class="conn-table">
+            <tr>
+                <td data-i18n="screen.enabled">Screen enabled:</td>
+                <td><input type="checkbox" id="scr_enabled" onchange="applyEnabledState()"></td>
+            </tr>
+            <tr>
+                <td data-i18n="screen.touch">Touch:</td>
+                <td><input type="checkbox" id="scr_touch"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td data-i18n="screen.dark">Dark mode:</td>
+                <td><input type="checkbox" id="scr_dark"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td data-i18n="screen.brightness">Brightness:</td>
+                <td colspan="2">
+                    <input type="range" id="scr_brightness" min="0" max="100" step="1"
+                           oninput="onBrightnessInput(this.value)">
+                    <span id="scr_brightness_val"></span> %
+                </td>
+            </tr>
+            <tr>
+                <td data-i18n="screen.refresh">Min refresh (s):</td>
+                <td colspan="2">
+                    <input type="number" id="scr_refresh" min="0" max="255" step="1">
+                    <span class="scr-hint" style="font-size:12px; color:#ccc;" data-i18n="screen.refresh_hint">seconds; 0 = refresh on every update. Controls the flickering of the screen</span>
+                </td>
+            </tr>
+        </table>
+
+        <div id="scr_wifi_warn" style="display:none; color:#ffcc00; font-size:12px; margin-top:6px;" data-i18n="screen.wifi_warn">
+            WiFi is not connected and the device is not in AP mode — the screen
+            cannot be turned off.
+        </div>
+
+        <button id="scr_disp_save" class="btn-save" onclick="screenSave('screen_msg')" data-i18n="screen.save">Save</button>
+        <div id="screen_msg" class="msg"></div>
+
+    </div>
+</div>
+
+<!-- POWER CONTROL --------------------------------------------------- -->
+<div class="conn-box">
+    <div class="conn-header screen-header" data-i18n="screen.power_control">Power Control</div>
+    <div class="conn-body scr-page" id="scr_power_body">
+
+        <table class="conn-table">
+            <tr>
+                <td data-i18n="screen.schedule">Schedule:</td>
+                <td>
+                    <div class="scr-inline">
+                        <input type="checkbox" id="scr_schedule" onchange="setScheduleUI(this.checked, true)">
+                        <span class="sched-label" data-i18n="screen.screen_off">Screen off:</span>
+                        <input type="time" id="scr_offTime">
+                        <span class="sched-label" data-i18n="screen.screen_on">Screen on:</span>
+                        <input type="time" id="scr_onTime">
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <div id="scr_time_warn" style="display:none; color:#ffcc00; font-size:12px; margin-top:6px;" data-i18n="screen.time_warn">
+            Scheduling is active but the system time is not valid (NTP not synced
+            or no manual time set) — the timed power control will not activate.
+        </div>
+
+        <table class="conn-table">
+            <tr>
+                <td data-i18n="screen.auto_off">Auto power-off:</td>
+                <td>
+                    <input type="checkbox" id="scr_autoOff" onchange="autoOffChange()">
+                    <input type="number" id="scr_autoOffSec" min="1" max="9999" step="1" maxlength="4"> s
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="font-size:12px; color:#ccc;"><span class="scr-hint" data-i18n="screen.auto_off_hint">The screen turns off automatically after the set time without any touch. A touch wakes it back up, showing the view it had when it turned off.</span></td>
+            </tr>
+        </table>
+
+        <button class="btn-save" onclick="screenSave('power_msg')" data-i18n="screen.save">Save</button>
+        <div id="power_msg" class="msg"></div>
+
+    </div>
+</div>
+
+<script src="/static_screen.js?v=3"></script>

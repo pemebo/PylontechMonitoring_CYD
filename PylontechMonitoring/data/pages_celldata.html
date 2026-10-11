@@ -1,0 +1,70 @@
+<div class="content">
+
+<h2 data-i18n="cell.title">Cell data</h2>
+
+<p style="font-size:14px; margin:0 0 12px;"><b data-i18n="cell.mqtt">MQTT:</b> <span id="mqtt_ind"></span></p>
+
+<div class="conn-grid-3">
+
+    <div class="conn-box">
+        <div class="conn-header" data-i18n="cell.parser">Cells Parser (BAT)</div>
+        <div class="conn-body">
+            <label>
+                <input id="enable_bat" type="checkbox">
+                <span data-i18n="cell.enable">Enable</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="conn-box">
+        <div class="conn-header" data-i18n="cell.mqtt_subtopics">MQTT Subtopics</div>
+        <div class="conn-body">
+            <label><span data-i18n="cell.topic_bat">Topic BAT</span><br>
+            <input id="topic_bat" type="text">
+            </label>
+            <br><br>
+            <label><span data-i18n="cell.cell_prefix">Cell Prefix</span><br>
+            <input id="cell_prefix" type="text">
+            </label>
+        </div>
+    </div>
+
+    <div class="conn-box">
+        <div class="conn-header" data-i18n="cell.query_interval">Query Interval</div>
+        <div class="conn-body">
+            <label><span data-i18n="cell.bat_seconds">BAT (seconds)</span><br>
+            <input id="interval_bat" type="number" min="10" step="1">
+            </label>
+            <small id="interval_bat_hint" style="opacity:.75"></small>
+        </div>
+    </div>
+
+</div>
+
+<!-- TABLE GOES HERE -->
+<div class="conn-box">
+    <div class="conn-header" data-i18n="cell.cell_values">Cell Values</div>
+    <div class="conn-body">
+
+        <table class="conn-table">
+            <thead>
+                <tr>
+                    <th data-i18n="cell.field_name">Field Name</th>
+                    <th data-i18n="cell.display_name">Display Name</th>
+                    <th data-i18n="cell.raw_data">Raw Data</th>
+                    <th data-i18n="cell.factor">Factor</th>
+                    <th data-i18n="cell.unit">Unit</th>
+                    <th data-i18n="cell.mqtt_col">MQTT</th>
+                </tr>
+            </thead>
+            <tbody id="bat_table"></tbody>
+        </table>
+
+        <button onclick="batSave()" data-i18n="cell.save">Save</button>
+        <div id="bat_msg" class="msg"></div>
+    </div>
+</div>
+
+</div>
+
+<script src="/static_celldata.js?v=3"></script>

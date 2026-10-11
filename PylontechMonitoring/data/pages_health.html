@@ -1,0 +1,64 @@
+<div class="card">
+    <h2 data-i18n="health.title">Health Status</h2>
+    <div id="health_header" class="card" style="padding:10px; font-weight:bold;"></div>
+
+    <h3 data-i18n="health.modules">Modules</h3>
+    <table class="conn-table" id="health_table">
+        <thead>
+            <tr>
+                <th data-i18n="health.module">Module</th>
+                <th data-i18n="health.status">Status</th>
+                <th data-i18n="health.temp">Temp</th>
+                <th data-i18n="health.cell_min">Cell Min</th>
+                <th data-i18n="health.cell_max">Cell Max</th>
+                <th data-i18n="health.delta">Delta</th>
+                <th data-i18n="health.cell_min_today">Cell Min Today</th>
+                <th data-i18n="health.cell_max_today">Cell Max Today</th>
+                <th data-i18n="health.delta_max_today">Delta Max Today</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <h3 data-i18n="health.history">History</h3>
+    <table class="conn-table" id="event_table">
+        <thead>
+            <tr>
+                <th data-i18n="health.date">Date</th>
+                <th data-i18n="health.module">Module</th>
+                <th data-i18n="health.event">Event</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <button onclick="healthReset()" data-i18n="health.reset">Reset</button>
+</div>
+<div class="card" style="margin-top:20px;">
+  <h2 data-i18n="health.thresholds_title">Delta thresholds settings</h2>
+
+  <label data-i18n="health.warning_threshold">Warning Threshold (V):</label>
+  <input id="cellDiffWarn"
+         type="number"
+         step="0.001"
+         style="width:100px"
+         oninput="healthAutoReload = false">
+
+  <br><br>
+
+  <label data-i18n="health.error_threshold">Error Threshold (V):</label>
+  <input id="cellDiffError"
+         type="number"
+         step="0.001"
+         style="width:100px"
+         oninput="healthAutoReload = false">
+
+  <br><br>
+
+  <button onclick="saveHealthConfig()" data-i18n="health.save">Save</button>
+  <div id="health_msg" class="msg"></div>
+</div>
+
+
+
+<script src="/static_health.js?v=3"></script>

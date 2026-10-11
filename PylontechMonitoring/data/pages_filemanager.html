@@ -1,0 +1,156 @@
+<h2 data-i18n="fm.title">ESP32 File Manager</h2>
+
+<style>
+#fm { padding: 0; }
+#fm table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+#fm td, #fm th { border: 1px solid #ccc; padding: 6px; }
+#fm button { padding: 6px 12px; margin-left: 10px; }
+</style>
+
+<div id="fm">
+
+<!-- Breadcrumb navigation -->
+<div id="breadcrumb"></div>
+
+<input type="file" id="file" multiple>
+<button onclick="upload()" data-i18n="fm.upload">Upload</button>
+<button onclick="delAll()" data-i18n="fm.delete_all">Delete all</button>
+
+<progress id="prog" value="0" max="100" style="display:none"></progress>
+<span id="progtext"></span>
+
+<table id="tbl"></table>
+
+</div>
+
+<script>
+var navPath = getUrlParam("path") || "/";
+
+function parsePath(path) {
+    if (path === "/") return [];
+    return path.split('/').filter(p => p !== '');
+}
+
+function getUrlParam(name) {
+    const params = new URLSearchParams(window.location.search);
+    return params.get(name);
+}
+
+function navigate(path) {
+    navPath = path;
+    load();
+}
+
+function load() {
+    let currentPath = navPath;
+
+    fetch('/fm/list?path=' + encodeURIComponent(currentPath))
+    .then(r => r.json())
+    .then(list => {
+        if (!Array.isArray(list)) return;
+
+        // Generate breadcrumb
+        let breadHtml = '<div style="margin-bottom:10px;">';
+        let parts = parsePath(currentPath);
+        let pathParts = ["/"];
+
+        parts.forEach((part, idx) => {
+            pathParts.push(part);
+            breadHtml += `<a href="#" onclick="navigate('${pathParts.join('/')}'); return false;">${part}</a>`;
+            if (idx < parts.length - 1) breadHtml += '/';
+        });
+        breadHtml += '</div>';
+        document.getElementById("breadcrumb").innerHTML = breadHtml;
+
+        // Generate table
+        let html = `<tr><th>${t("fm.col_name")}</th><th>${t("fm.col_size")}</th><th>${t("fm.col_action")}</th></tr>`;
+        list.forEach(f => {
+            // Address the entry by its full path so the server can tell an SD
+            // file from a SPIFFS file, and so entries in sub-directories work.
+            let fullPath = (currentPath === "/" ? "/" : currentPath + "/") + f.name;
+            let dirLink = f.type === "dir" ? `<a href="#" onclick="navigate('${fullPath}'); return false;">/${f.name}</a>` : f.name;
+            let downloadLink = f.type === "file" ? `<a href="/fm/download?file=${encodeURIComponent(fullPath)}">${t("fm.download")}</a>` : '';
+            let deleteLink = `<a href="#" onclick="del('${fullPath}')">${t("fm.delete")}</a>`;
+
+            html += `<tr>
+                <td>${dirLink}</td>
+                <td>${f.size}${t("fm.bytes")}</td>
+                <td>
+                    ${downloadLink}
+                    ${deleteLink}
+                </td>
+            </tr>`;
+        });
+        document.getElementById("tbl").innerHTML = html;
+    });
+}
+
+async function upload() {
+    let files = document.getElementById("file").files;
+    if (!files.length) return;
+
+    let prog = document.getElementById("prog");
+    let progtext = document.getElementById("progtext");
+
+    prog.style.display = "inline-block";
+    prog.value = 0;
+    progtext.innerText = "0%";
+
+    for (let i = 0; i < files.length; i++) {
+        let f = files[i];
+
+        let fd = new FormData();
+        fd.append("file", f, f.name);
+
+        await new Promise((resolve, reject) => {
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "/fm/upload");
+
+            xhr.upload.onprogress = function(e) {
+                if (e.lengthComputable) {
+                    let p = Math.round((e.loaded / e.total) * 100);
+                    prog.value = p;
+                    progtext.innerText = t("fm.progress_file")
+                        .replace("{i}", i + 1)
+                        .replace("{n}", files.length)
+                        .replace("{p}", p);
+                }
+            };
+
+            xhr.onload = function() {
+                if (xhr.status === 200) resolve();
+                else reject();
+            };
+
+            xhr.onerror = reject;
+            xhr.send(fd);
+        });
+    }
+
+    prog.value = 100;
+    progtext.innerText = t("fm.done");
+    load();
+}
+
+function del(name) {
+    fetch("/fm/delete?file=" + encodeURIComponent(name))
+    .then(() => load());
+}
+
+function delAll() {
+    if (!confirm(t("fm.confirm_delete_all").replace("{path}", navPath))) return;
+
+    fetch("/fm/deleteall?path=" + encodeURIComponent(navPath))
+    .then(r => {
+        if (!r.ok) throw new Error(r.status);
+        return r.json();
+    })
+    .then(res => {
+        if (res.failed > 0) alert(t("fm.err_delete_all_some").replace("{n}", res.failed));
+        load();
+    })
+    .catch(err => alert(t("fm.err_delete_all_failed") + err.message));
+}
+
+load();
+</script>

@@ -1,0 +1,74 @@
+<h2 data-i18n="dash.title">Dashboard</h2>
+
+<div class="dashboard-grid">
+
+    <div class="card batt-hero" id="battIconCard">
+        <h2 data-i18n="dash.battery">Battery</h2>
+        <div id="batt_svg"></div>
+        <div class="batt-soc" id="batt_soc"></div>
+        <div class="batt-status" id="batt_status"></div>
+    </div>
+
+    <div class="card" id="batteryOverviewCard">
+        <h2 data-i18n="dash.battery_overview">Battery Overview</h2>
+        <p><b data-i18n="dash.status">Status:</b> <span id="bat_status"></span></p>
+        <p><b data-i18n="dash.soc">SOC:</b> <span id="bat_soc"></span></p>
+        <p><b data-i18n="dash.voltage">Voltage:</b> <span id="bat_voltage"></span></p>
+        <p><b data-i18n="dash.current">Current:</b> <span id="bat_current"></span></p>
+        <p><b data-i18n="dash.power">Power:</b> <span id="bat_power"></span></p>
+        <p><b data-i18n="dash.temperature">Temperature:</b> <span id="bat_temp"></span></p>
+    </div>
+
+    <div class="card" id="healthCard">
+        <h2 data-i18n="dash.health">Health</h2>
+        <p><b data-i18n="dash.status">Status:</b> <span id="hl_indicator" style="font-weight:bold;"></span> <span id="hl_status"></span></p>
+        <p><b data-i18n="dash.cell_min">Cell Min:</b> <span id="hl_min"></span></p>
+        <p><b data-i18n="dash.cell_max">Cell Max:</b> <span id="hl_max"></span></p>
+        <p><b data-i18n="dash.max_delta">Max Delta:</b> <span id="hl_delta"></span></p>
+        <p><b data-i18n="dash.avg_soh">Average SOH:</b> <span id="hl_soh"></span></p>
+        <p><b data-i18n="dash.events_history">Events in history:</b> <span id="hl_events">0</span></p>
+    </div>
+
+    <div class="card" id="batteryCard">
+        <h2 data-i18n="dash.modules">Modules</h2>
+        <p><b data-i18n="dash.detected_modules">Detected modules:</b> <span id="bat_modules"></span></p>
+        <p><b data-i18n="dash.last_update">Last update:</b> <span id="bat_last"></span></p>
+    </div>
+
+    <div class="card" id="wifiCard">
+        <h2 data-i18n="dash.wifi">WiFi</h2>
+        <p><b data-i18n="dash.mode">Mode:</b> <span id="wifi_mode"></span></p>
+        <p><b data-i18n="dash.ssid">SSID:</b> <span id="wifi_ssid"></span></p>
+        <p><b data-i18n="dash.ip">IP:</b> <span id="wifi_ip"></span></p>
+        <p><b data-i18n="dash.rssi">RSSI:</b> <span id="wifi_rssi"></span> dBm</p>
+        <p><b data-i18n="dash.quality">Quality:</b> <span id="wifi_quality"></span></p>
+    </div>
+
+    <div class="card" id="mqttCard">
+        <h2 data-i18n="dash.mqtt">MQTT</h2>
+        <p><b data-i18n="dash.status">Status:</b> <span id="mqtt_status"></span></p>
+        <p><b data-i18n="dash.server">Server:</b> <span id="mqtt_server"></span></p>
+        <p><b data-i18n="dash.last_contact">Last contact:</b> <span id="mqtt_last"></span></p>
+    </div>
+
+    <div class="card" id="cpuMemCard">
+        <h2 data-i18n="dash.cpu_memory">CPU &amp; Memory</h2>
+        <p><b data-i18n="dash.core0">Core 0:</b> <span id="cpu_load0"></span><span class="cpu-bar"><span class="cpu-fill" id="cpu_bar0"></span></span></p>
+        <p><b data-i18n="dash.core1">Core 1:</b> <span id="cpu_load1"></span><span class="cpu-bar"><span class="cpu-fill" id="cpu_bar1"></span></span></p>
+        <p><b data-i18n="dash.heap">Heap:</b> <span id="mem_heap_pct"></span><span class="cpu-bar"><span class="cpu-fill mem-fill" id="mem_heap_bar"></span></span></p>
+        <div id="psram_section" style="display:none;">
+            <p><b data-i18n="dash.psram">PSRAM:</b> <span id="mem_psram_pct"></span><span class="cpu-bar"><span class="cpu-fill mem-fill" id="mem_psram_bar"></span></span></p>
+        </div>
+        <p><b data-i18n="dash.sd_free">SD free:</b> <span id="mem_sd_free"></span></p>
+    </div>
+
+    <div class="card" id="systemCard">
+        <h2 data-i18n="dash.system">System</h2>
+        <p><b data-i18n="dash.time">Time:</b> <span id="sys_time"></span></p>
+        <p><b data-i18n="dash.uptime">Uptime:</b> <span id="sys_uptime"></span></p>
+        <p><b data-i18n="dash.firmware">Firmware:</b> <span id="sys_fw"></span></p>
+    </div>
+
+</div>
+
+<script src="/static_dashboard.js?v=4"></script>

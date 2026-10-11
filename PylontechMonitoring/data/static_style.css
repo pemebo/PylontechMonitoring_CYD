@@ -1,0 +1,485 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f2f2f7;
+}
+
+.title-with-icons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Topbar */
+.topbar {
+    background: #1e1e2f;
+    color: white;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+/* Compact header: kill the browser-default h1 margin (0.67em top+bottom) and
+   cap its size. Left as-is, the h1 alone made the topbar ~104px tall, which
+   ate a third of a phone screen in landscape. */
+.topbar h1 {
+    margin: 0;
+    font-size: 1.15rem;
+    line-height: 1.2;
+}
+
+.burger {
+    display: none;           /* desktop: the sidebar is always visible, no toggle */
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;          /* never shrink below the tap target */
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    touch-action: manipulation;
+}
+
+/* Drawn instead of the ☰ glyph so the icon size never depends on the device font. */
+.burger-icon {
+    display: block;
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    pointer-events: none;    /* the whole 44x44 box is the tap target */
+}
+
+/* Sidebar */
+.sidebar {
+    width: 220px;
+    background: #2c2c3e;
+    color: white;
+    position: fixed;
+    top: var(--topbar-h, 104px);  /* sits under the sticky topbar (height set from JS) */
+    bottom: 0;
+    height: auto;
+    left: 0;                      /* desktop: fixed sidebar, always visible */
+    padding-top: 20px;
+    overflow-y: auto;             /* long menu stays reachable on short screens */
+    -webkit-overflow-scrolling: touch;
+    z-index: 5;                   /* above the content, below the topbar (z-index 10) */
+    transition: left 0.3s ease;
+}
+
+/* Show sidebar when .open class is added */
+.sidebar.open {
+    left: 0;
+}
+
+/* Off-canvas backdrop: dims the content and closes the menu on tap. Hidden
+   everywhere except the off-canvas mode (see the mobile/short-landscape query
+   below), where it is shown only while the menu is open. */
+.sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 4;   /* above content, below the sidebar (5) and topbar (10) */
+}
+
+.sidebar nav a {
+    display: block;
+    padding: 12px 20px;
+    color: white;
+    text-decoration: none;
+}
+
+.sidebar nav a:hover {
+    background: #3d3d55;
+}
+
+.sidebar-nav-section {
+    padding: 14px 20px 4px;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #8a8aa0;
+}
+
+/* Content */
+#content {
+    margin-left: 240px;
+    padding: 20px;
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+/* Cards */
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    /* Every card keeps the SAME width (the container/viewport, like desktop) and
+       a wide data table scrolls inside its own border instead of stretching the
+       card. The old "grow the card to the table" rule left the boxes ragged
+       (Modules = 7 columns vs Cell = ~17), so it was removed. */
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Settings boxes that use .conn-box instead of .card (Screen, Settings) are a
+   separate case: they keep growing to the table's width so the border wraps the
+   whole table, and the page scrolls horizontally with no inner scrollbar. */
+@media (max-width: 800px) {
+    .conn-box:has(.conn-table) {
+        max-width: none;
+        min-width: max-content;
+    }
+}
+
+.card h2 {
+    margin-top: 0;
+}
+
+.batt-hero {
+    grid-column: 1 / -1;
+    text-align: center;
+    justify-self: center;
+    max-width: 320px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#batt_svg svg {
+    width: 170px;
+    height: 170px;
+    margin: 8px auto;
+    display: block;
+}
+
+.batt-soc {
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.batt-status {
+    color: #78909c;
+    font-size: 15px;
+    margin-top: 2px;
+}
+
+/* CPU & Memory card */
+.cpu-bar {
+    display: inline-block;
+    width: 90px;
+    height: 8px;
+    background: #eceff1;
+    border-radius: 4px;
+    overflow: hidden;
+    vertical-align: middle;
+    margin-left: 8px;
+}
+
+.cpu-fill {
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: #1e88e5;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+}
+
+.mem-fill {
+    background: #1e88e5;
+}
+
+/* Mobile and short-landscape: the off-canvas menu is driven by HEIGHT as well
+   as WIDTH. A phone in landscape is wide (>800px) but short, so a width-only
+   query would leave the desktop sidebar permanently open with no way to hide
+   it. The height clause gives landscape phones the same collapsible menu. */
+@media (max-width: 800px), (orientation: landscape) and (max-height: 500px) {
+    .burger {
+        display: inline-flex;   /* hamburger toggles the off-canvas menu */
+    }
+    .sidebar {
+        left: -240px;
+        transition: 0.3s;
+    }
+    .sidebar.open {
+        left: 0;
+    }
+    #content {
+        margin-left: 0;
+    }
+    /* Show the backdrop only while the off-canvas menu is open */
+    .sidebar.open ~ .sidebar-backdrop {
+        display: block;
+    }
+}
+
+.logo-icon {
+    height: 28px;      /* fixed height */
+    width: auto;       /* automatic width */
+    object-fit: contain;
+    display: block;
+}
+@media (max-width: 600px) {
+    .logo-icon {
+        height: 14px;
+    }
+}
+
+.log-box {
+    border: 1px solid #444;       /* border color */
+    border-radius: 6px;           /* slightly rounded */
+    padding: 10px;                /* inner padding */
+    background-color: #0f0f0f;    /* dark background */
+    color: #00ff00;               /* font color like console */
+    font-family: monospace;       /* monospaced font */
+    white-space: pre-wrap;        /* keep line breaks */
+    overflow-y: auto;             /* scroll for long logs */
+    max-height: 80vh;             /* limited height */
+}
+.console-box {
+    width: 100%;
+    height: 60vh;              /* <<< large enough */
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 10px;
+    background-color: #0f0f0f;
+    color: #00ff00;
+    font-family: monospace;
+    white-space: pre-wrap;
+    overflow-y: auto;
+    resize: none;              /* user cannot resize */
+    margin-bottom: 15px;
+}
+
+.console-controls {
+    margin-bottom: 15px;
+}
+
+.console-controls input {
+    width: 300px;
+}
+
+.quick-commands a {
+    margin-right: 10px;
+    cursor: pointer;
+}
+.conn-box {
+    border: 1px solid #444;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    background: #5a5a5a;
+    /* Fallback containment for the settings pages that use .conn-box instead of
+       .card (Screen, Settings): a wide table scrolls inside if the box cannot
+       grow (browsers without :has()). */
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.conn-header {
+    padding: 10px;
+    font-weight: bold;
+    color: white;
+    border-radius: 6px 6px 0 0;
+}
+
+.wifi-header { background: #0077cc; }
+.mqtt-header { background: #ff8800; }
+.ntp-header  { background: #22aa22; }
+.ip-header   { background: #666666; }
+.lock-header { background: #9933cc; }
+.screen-header { background: #008080; }
+.restart-header { background: #aa4433; }
+
+/* Screen page: fixed-width first column so the Power Control checkboxes
+   (Schedule / Auto power-off) line up with the Display ones above. */
+.scr-page .conn-table td:first-child { width: 120px; }
+
+/* Compact inline controls in the Power Control card: keep label + field next
+   to each other on the same line instead of spreading across columns. */
+.scr-page .conn-table td > input { vertical-align: middle; }
+.scr-page .conn-table input[type="time"] { width: 90px; }
+.scr-page .conn-table input#scr_autoOffSec { width: 70px; }
+
+/* Long inline helper next to a control: the cells are nowrap by default, so on
+   a phone this text would force the whole box very wide. Let it wrap within a
+   bounded width instead, so the box can stay narrow. */
+@media (max-width: 800px) {
+    .scr-hint {
+        display: block;
+        white-space: normal;
+        max-width: 150px;
+    }
+    /* Schedule controls on one cell: the cells are nowrap by default and two
+       time inputs + labels set the box width. Let the group wrap in a bounded
+       width so the box can shrink to the viewport. */
+    .scr-inline {
+        white-space: normal;
+        max-width: 150px;
+    }
+    /* Keep the schedule labels intact; only wrap between controls. */
+    .scr-inline .sched-label { white-space: nowrap; }
+}
+
+/* Schedule toggle button */
+.toggle-btn {
+    background: #555;
+    border: 1px solid #888;
+    color: #ccc;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+.toggle-btn.on {
+    background: #008080;
+    border-color: #00b3b3;
+    color: #fff;
+}
+.sched-row {
+    margin-top: 10px;
+}
+.sched-row td {
+    padding: 4px 6px;
+}
+.sched-label {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.conn-body {
+    padding: 10px;
+}
+
+.scr-disabled {
+    opacity: 0.45;
+}
+
+.msg {
+    margin-top: 10px;
+    color: #00ff00;
+}
+/* Single WiFi entry */
+.wifi-entry {
+    background: #555;         /* lighter than before */
+    border: 1px solid #777;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+}
+
+/* Rows */
+.wifi-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+/* SSID links */
+.wifi-ssid {
+    font-weight: bold;
+    color: #fff;
+}
+
+/* Signal rechts */
+.wifi-signal {
+    color: #ddd;
+}
+
+/* Password field */
+.wifi-row input {
+    flex: 1;
+    margin-right: 10px;
+    background: #666;
+    color: white;
+    border: 1px solid #888;
+    padding: 6px;
+    border-radius: 4px;
+}
+
+/* Connect-Button */
+.wifi-row button {
+    padding: 6px 12px;
+    background: #1e90ff;
+    border: none;
+    color: white;
+    border-radius: 4px;
+}
+.conn-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+/* Table layout for parser pages */
+.conn-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+.conn-table th,
+.conn-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #ccc;
+    text-align: left;
+    white-space: nowrap; /* prevent wrapping */
+}
+
+.conn-table th {
+    background: #e5e5e5;
+    font-weight: bold;
+}
+
+.conn-table select,
+.conn-table input[type="text"],
+.conn-table input[type="number"] {
+    width: 120px;       /* fixed width → do NOT wrap */
+}
+
+.conn-table input[type="checkbox"] {
+    transform: scale(1.2);
+}
+
+/* Frame Dump view */
+.frame {
+    padding: 6px 0;
+    border-bottom: 1px dashed #444;
+}
+.frame:last-child {
+    border-bottom: none;
+}
+.frame-ts {
+    color: #888888;
+    font-family: monospace;
+    font-size: 11px;
+    margin-bottom: 2px;
+}
+.frame-body {
+    margin: 0;
+    font-family: monospace;
+    font-size: 12px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}

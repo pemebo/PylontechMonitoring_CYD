@@ -1,0 +1,71 @@
+<div class="content">
+
+    <h2 data-i18n="bv.title">Battery data</h2>
+
+    <p style="font-size:14px; margin:0 0 12px;"><b data-i18n="bv.mqtt">MQTT:</b> <span id="mqtt_ind"></span></p>
+
+    <div class="conn-grid-3">
+
+        <!-- Temperature -->
+        <div class="conn-box">
+            <div class="conn-header" data-i18n="bv.temp_settings">Temperature Settings</div>
+            <div class="conn-body">
+                <label>
+                    <input id="use_fahrenheit" type="checkbox">
+                    <span data-i18n="bv.fahrenheit">Send Temperature in Fahrenheit</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- MQTT -->
+        <div class="conn-box">
+            <div class="conn-header" data-i18n="bv.mqtt_subtopics">MQTT Subtopics</div>
+            <div class="conn-body">
+                <label><span data-i18n="bv.topic_pwr">Topic PWR</span><br>
+                    <input id="topic_pwr" type="text">
+                </label>
+                <br><br>
+                <label><span data-i18n="bv.topic_stack">Topic Stack</span><br>
+                    <input id="topic_stack" type="text">
+                </label>
+            </div>
+        </div>
+
+        <!-- Interval -->
+        <div class="conn-box">
+            <div class="conn-header" data-i18n="bv.query_interval">Query Interval</div>
+            <div class="conn-body">
+                <label><span data-i18n="bv.pwr_seconds">PWR (seconds)</span><br>
+                    <input id="interval_pwr" type="number" min="1">
+                </label>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Table -->
+    <div class="conn-box">
+        <div class="conn-header" data-i18n="bv.pwr_parser_fields">PWR Parser Fields</div>
+        <div class="conn-body">
+            <table class="conn-table">
+                <thead>
+                    <tr>
+                        <th data-i18n="bv.field_name">Field Name</th>
+                        <th data-i18n="bv.display_name">Display Name</th>
+                        <th data-i18n="bv.raw_data">Raw Data</th>
+                        <th data-i18n="bv.factor">Factor</th>
+                        <th data-i18n="bv.unit">Unit</th>
+                        <th data-i18n="bv.mqtt_col">MQTT</th>
+                    </tr>
+                </thead>
+                <tbody id="pwr_table"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <button class="btn-save" onclick="pwrSave()" data-i18n="bv.save">Save</button>
+    <div id="pwr_msg" class="msg"></div>
+
+</div>
+
+<script src="/static_basevalue.js?v=3"></script>

@@ -1,0 +1,48 @@
+<div class="content">
+
+    <h2 data-i18n="stat.title">Battery statistics</h2>
+
+    <p style="font-size:14px; margin:0 0 12px;"><b data-i18n="stat.mqtt">MQTT:</b> <span id="mqtt_ind"></span></p>
+
+    <div class="conn-grid-3">
+
+        <div class="conn-box">
+            <div class="conn-header" data-i18n="stat.parser">Statistics Parser (STAT)</div>
+            <div class="conn-body">
+                <label>
+                    <input id="enable_stat" type="checkbox">
+                </label>
+            </div>
+        </div>
+
+        <div class="conn-box">
+            <div class="conn-header" data-i18n="stat.mqtt_subtopic">MQTT Subtopic</div>
+            <div class="conn-body">
+                <label><span data-i18n="stat.topic_stat">Topic STAT</span><br>
+                    <input id="topic_stat" type="text">
+                </label>
+            </div>
+        </div>
+
+        <div class="conn-box">
+            <div class="conn-header" data-i18n="stat.query_interval">Query Interval</div>
+            <div class="conn-body">
+                <label><span data-i18n="stat.stat_seconds">STAT (seconds)</span><br>
+                    <input id="interval_stat" type="number">
+                </label>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="stat_groups"></div>
+
+	<table id="stat_table"></table>
+	<br>
+	<button onclick="saveStatSettings()" data-i18n="stat.save">Save</button>
+	<div id="stat_msg" class="msg"></div>
+
+
+</div>
+
+<script src="/static_statistic.js?v=3"></script>

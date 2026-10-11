@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<title data-i18n="layout.title">Pylontech Dashboard</title>
+<script>window.I18N_LANG="__LANG__";</script>
+<script src="/static_i18n.js"></script>
+<script>
+// Delegated click handler so the menu answers the very first tap, even before
+// the rest of the document has been loaded and parsed.
+document.addEventListener('click', function (e) {
+    if (!(e.target instanceof Element)) return;
+    if (e.target.closest('.burger')) {
+        document.getElementById('sidebar').classList.toggle('open');
+    } else if (e.target.closest('.sidebar-backdrop')) {
+        document.getElementById('sidebar').classList.remove('open');
+    }
+});
+</script>
+<link rel="stylesheet" href="/static_style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+
+<header class="topbar">
+    <button class="burger" type="button" aria-label="Toggle menu" data-i18n-aria="layout.toggle_menu">
+        <svg class="burger-icon" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
+
+    <div class="title-with-icons">
+        <h1 data-i18n="layout.h1">Pylontech Monitor</h1>
+    </div>
+</header>
+
+<aside id="sidebar" class="sidebar">
+<nav id="sidebar-nav">
+
+    <div class="sidebar-nav-section" data-i18n="nav.section_info">Info</div>
+    <a href="#" onclick="loadPage('pages_dashboard'); return false;" data-i18n="nav.dashboard">Dashboard</a>
+    <a href="#" onclick="loadPage('pages_modules'); return false;" data-i18n="nav.modules">Modules</a>
+    <a href="#" onclick="loadPage('pages_health'); return false;" data-i18n="nav.health">Health</a>
+
+    <div class="sidebar-nav-section" data-i18n="nav.section_mqtt">MQTT</div>
+    <a href="#" onclick="loadPage('pages_basevalue'); return false;" data-i18n="nav.battery_data">Battery data</a>
+    <a href="#" onclick="loadPage('pages_celldata'); return false;" data-i18n="nav.cells">Cells</a>
+    <a href="#" onclick="loadPage('pages_statistic'); return false;" data-i18n="nav.statistics">Statistics</a>
+
+    <div class="sidebar-nav-section" data-i18n="nav.section_config">Config</div>
+    <a href="#" onclick="loadPage('pages_connection'); return false;" data-i18n="nav.settings">Settings</a>
+    <a href="#" onclick="loadPage('pages_screen'); return false;" data-i18n="nav.screen">Screen</a>
+
+    <div class="sidebar-nav-section" data-i18n="nav.section_service">Service</div>
+    <a href="#" onclick="loadPage('pages_log'); return false;" data-i18n="nav.log">Log</a>
+    <a href="#" onclick="loadPage('pages_dataexport'); return false;" data-i18n="nav.data_export">Data export</a>
+    <a href="#" onclick="loadPage('pages_sdcard'); return false;" data-i18n="nav.sd_card">SD card</a>
+    <a href="#" onclick="loadPage('pages_filemanager'); return false;" data-i18n="nav.file_manager">File manager</a>
+    <a href="#" onclick="loadPage('pages_console'); return false;" data-i18n="nav.console">Console</a>
+    <a href="#" onclick="loadPage('pages_framedump'); return false;" data-i18n="nav.frame_dump">Frame Dump</a>
+    <a href="#" onclick="loadPage('pages_update'); return false;" data-i18n="nav.update">Update</a>
+
+</nav>
+</aside>
+
+<div id="sidebar-backdrop" class="sidebar-backdrop" aria-hidden="true"></div>
+
+<main id="content">
+    <!-- Content is loaded dynamically -->
+</main>
+
+<script>
+// -------------------------------------------------------------
+// Close Sidebar when link is clicked
+// -------------------------------------------------------------
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("#sidebar a").forEach(a => {
+        a.addEventListener("click", () => {
+            document.getElementById("sidebar").classList.remove("open");
+        });
+    });
+});
+
+// -------------------------------------------------------------
+// Page lifecycle
+// -------------------------------------------------------------
+let pageLoadGeneration = 0;
+
+function runPageCleanup() {
+    if (typeof window.pageCleanup === "function") {
+        window.pageCleanup();
+    }
+}
+
+function isCurrentPageLoad(generation) {
+    return generation === pageLoadGeneration;
+}
+
+// -------------------------------------------------------------
+// Dynamically Load Subpages
+// -------------------------------------------------------------
+function loadPage(url) {
+    const generation = ++pageLoadGeneration;
+    runPageCleanup();
+
+    fetch(url + ".html")
+        .then(r => {
+            if (!isCurrentPageLoad(generation)) return null;
+            if (r.status === 401) {
+                document.getElementById("content").innerHTML =
+                    "<p>" + t("layout.auth_required") + "</p>";
+                return null;
+            }
+            if (!r.ok) {
+                throw new Error("HTTP " + r.status);
+            }
+            return r.text();
+        })
+        .then(html => {
+            if (html === null || !isCurrentPageLoad(generation)) return;
+
+            const content = document.getElementById("content");
+            content.innerHTML = html;
+            applyI18n(content);
+
+            const scripts = content.querySelectorAll("script");
+
+            scripts.forEach(oldScript => {
+                const newScript = document.createElement("script");
+
+                if (oldScript.src) {
+                    newScript.src = oldScript.src;
+                    newScript.onload = () => {
+                        if (!isCurrentPageLoad(generation)) return;
+                        applyI18n(content);
+                        if (url.includes("connection")) {
+                            initConnectionPage();
+                        } else if (url.includes("screen")) {
+                            loadScreen();
+                        }
+                    };
+                } else {
+                    newScript.textContent = oldScript.textContent;
+                    if (url.includes("connection")) {
+                        setTimeout(() => {
+                            if (!isCurrentPageLoad(generation)) return;
+                            applyI18n(content);
+                            initConnectionPage();
+                        }, 10);
+                    } else if (url.includes("screen")) {
+                        setTimeout(() => {
+                            if (!isCurrentPageLoad(generation)) return;
+                            applyI18n(content);
+                            loadScreen();
+                        }, 10);
+                    }
+                }
+
+                if (isCurrentPageLoad(generation)) {
+                    document.body.appendChild(newScript);
+                }
+            });
+
+            if (scripts.length === 0 && url.includes("connection") &&
+                isCurrentPageLoad(generation)) {
+                applyI18n(content);
+                initConnectionPage();
+            }
+        })
+        .catch(err => {
+            if (!isCurrentPageLoad(generation)) return;
+            document.getElementById("content").innerHTML =
+                t("layout.error_loading") + err.message;
+        });
+}
+
+// Keep the fixed sidebar aligned under the sticky topbar: the topbar height
+// changes when the page title wraps on narrow screens.
+function syncTopbarHeight() {
+    const topbar = document.querySelector('.topbar');
+    if (topbar) {
+        document.documentElement.style.setProperty('--topbar-h', topbar.offsetHeight + 'px');
+    }
+}
+window.addEventListener('DOMContentLoaded', syncTopbarHeight);
+window.addEventListener('resize', syncTopbarHeight);
+window.addEventListener('orientationchange', syncTopbarHeight);
+
+// -------------------------------------------------------------
+// MQTT status indicator (Battery data / Cells / Statistics)
+// Same states as the Dashboard MQTT card: Disabled / Active / Disconnected
+// -------------------------------------------------------------
+function updateMqttIndicator() {
+    fetch("/api/dashboard")
+        .then(r => r.json())
+        .then(d => {
+            const el = document.getElementById("mqtt_ind");
+            if (!el) return;
+            el.textContent =
+                !d.mqtt.enabled ? t("layout.mqtt_disabled") :
+                d.mqtt.connected ? t("layout.mqtt_active") : t("layout.mqtt_disconnected");
+            el.style.color =
+                d.mqtt.enabled && !d.mqtt.connected ? "#e53935" : "";
+        })
+        .catch(() => {});
+}
+
+// -------------------------------------------------------------
+// Auto-Load Homepage (or subpage selected by URL)
+// -------------------------------------------------------------
+window.addEventListener("DOMContentLoaded", () => {
+    const path = window.location.pathname;
+
+    if (path === "/filemanager") {
+        loadPage("pages_filemanager");
+    } else if (path === "/service" || path === "/update") {
+        loadPage("pages_update");
+    } else {
+        loadPage("pages_dashboard");
+    }
+});
+</script>
+
+</body>
+</html>

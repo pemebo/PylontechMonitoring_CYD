@@ -1,0 +1,28 @@
+<h2 data-i18n="log.title">Log</h2>
+
+<!-- Log Window -->
+<div class="log-box">
+    <pre id="logbox" data-i18n="log.loading">loading...</pre>
+</div>
+
+<!-- Reload Button -->
+<div class="box" style="margin-top: 10px;">
+    <button onclick="loadLog()" data-i18n="log.reload">Reload</button>
+</div>
+
+<!-- Log Level Filter -->
+<div class="box" style="margin-top: 10px;">
+    <h3 data-i18n="log.level_filter">Log Level Filter</h3>
+
+    <label><input type="checkbox" id="log_info"> <span data-i18n="log.info">Info</span></label>
+    <label><input type="checkbox" id="log_warn"> <span data-i18n="log.warn">Warn</span></label>
+    <label><input type="checkbox" id="log_error"> <span data-i18n="log.error">Error</span></label>
+    <label><input type="checkbox" id="log_debug"> <span data-i18n="log.debug">Debug</span></label>
+
+    <button onclick="saveLogLevel()" data-i18n="log.save">Save</button>
+
+    <!-- Save confirmation -->
+    <pre id="logmsg"></pre>
+</div>
+
+<script src="/static_log.js?v=3"></script>

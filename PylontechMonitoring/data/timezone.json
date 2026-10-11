@@ -1,0 +1,104 @@
+{
+  "Europe": [
+    {"city": "London",   "tz": "Europe/London",   "posix": "GMT0BST-1,M3.5.0/01:00:00,M10.5.0/02:00:00"},
+    {"city": "Berlin",   "tz": "Europe/Berlin",   "posix": "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00"},
+    {"city": "Paris",    "tz": "Europe/Paris",    "posix": "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00"},
+    {"city": "Rome",     "tz": "Europe/Rome",     "posix": "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00"},
+    {"city": "Madrid",   "tz": "Europe/Madrid",   "posix": "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00"},
+    {"city": "Vienna",   "tz": "Europe/Vienna",   "posix": "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00"},
+    {"city": "Athens",   "tz": "Europe/Athens",   "posix": "EET-2EEST-3,M3.5.0/03:00:00,M10.5.0/04:00:00"},
+    {"city": "Moscow",   "tz": "Europe/Moscow",   "posix": "MSK-3"},
+    {"city": "Lisbon",   "tz": "Europe/Lisbon",   "posix": "WET0WEST-1,M3.5.0/01:00:00,M10.5.0/02:00:00"},
+    {"city": "Dublin",   "tz": "Europe/Dublin",   "posix": "IST-1GMT0,M3.5.0/01:00:00,M10.5.0/02:00:00"},
+    {"city": "Oslo",     "tz": "Europe/Oslo",     "posix": "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00"},
+    {"city": "Stockholm","tz": "Europe/Stockholm","posix": "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00"},
+    {"city": "Helsinki", "tz": "Europe/Helsinki", "posix": "EET-2EEST-3,M3.5.0/03:00:00,M10.5.0/04:00:00"},
+    {"city": "Tallinn",  "tz": "Europe/Tallinn",  "posix": "EET-2EEST-3,M3.5.0/03:00:00,M10.5.0/04:00:00"},
+    {"city": "Riga",     "tz": "Europe/Riga",     "posix": "EET-2EEST-3,M3.5.0/03:00:00,M10.5.0/04:00:00"},
+    {"city": "Vilnius",  "tz": "Europe/Vilnius",  "posix": "EET-2EEST-3,M3.5.0/03:00:00,M10.5.0/04:00:00"},
+    {"city": "Budapest", "tz": "Europe/Budapest", "posix": "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00"},
+    {"city": "Prague",   "tz": "Europe/Prague",   "posix": "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00"},
+    {"city": "Warsaw",   "tz": "Europe/Warsaw",   "posix": "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00"},
+    {"city": "Zurich",   "tz": "Europe/Zurich",   "posix": "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00"}
+  ],
+
+   "America": [
+    {"city": "New York",     "tz": "America/New_York", "posix": "EST+5EDT+4,M3.2.0/02:00:00,M11.1.0/02:00:00"},
+    {"city": "Chicago",      "tz": "America/Chicago",  "posix": "CST+6CDT+5,M3.2.0/02:00:00,M11.1.0/02:00:00"},
+    {"city": "Denver",       "tz": "America/Denver",   "posix": "MST+7MDT+6,M3.2.0/02:00:00,M11.1.0/02:00:00"},
+    {"city": "Los Angeles",  "tz": "America/Los_Angeles", "posix": "PST+8PDT+7,M3.2.0/02:00:00,M11.1.0/02:00:00"},
+    {"city": "Anchorage",    "tz": "America/Anchorage", "posix": "AKST+9AKDT+8,M3.2.0/02:00:00,M11.1.0/02:00:00"},
+    {"city": "Phoenix",      "tz": "America/Phoenix",   "posix": "MST+7"},
+    {"city": "Toronto",      "tz": "America/Toronto",   "posix": "EST+5EDT+4,M3.2.0/02:00:00,M11.1.0/02:00:00"},
+    {"city": "Vancouver",    "tz": "America/Vancouver", "posix": "PST+8PDT+7,M3.2.0/02:00:00,M11.1.0/02:00:00"},
+    {"city": "Mexico City",  "tz": "America/Mexico_City","posix": "CST+6CDT+5,M4.1.0/02:00:00,M10.5.0/02:00:00"},
+    {"city": "Sao Paulo",    "tz": "America/Sao_Paulo", "posix": "BRT+3"},
+    {"city": "Buenos Aires", "tz": "America/Argentina/Buenos_Aires", "posix": "ART+3"},
+    {"city": "Santiago",     "tz": "America/Santiago", "posix": "CLT+4CLST+3,M9.1.6/24:00:00,M4.1.6/24:00:00"},
+    {"city": "Bogota",       "tz": "America/Bogota",   "posix": "COT+5"},
+    {"city": "Lima",         "tz": "America/Lima",     "posix": "PET+5"},
+    {"city": "Caracas",      "tz": "America/Caracas",  "posix": "VET+4"}
+  ],
+
+    "Asia": [
+    {"city": "Dubai",     "tz": "Asia/Dubai",     "posix": "GST-4"},
+    {"city": "Karachi",   "tz": "Asia/Karachi",   "posix": "PKT-5"},
+    {"city": "Dhaka",     "tz": "Asia/Dhaka",     "posix": "BDT-6"},
+    {"city": "Bangkok",   "tz": "Asia/Bangkok",   "posix": "ICT-7"},
+    {"city": "Singapore", "tz": "Asia/Singapore", "posix": "SGT-8"},
+    {"city": "Shanghai",  "tz": "Asia/Shanghai",  "posix": "CST-8"},
+    {"city": "Hong Kong", "tz": "Asia/Hong_Kong", "posix": "HKT-8"},
+    {"city": "Tokyo",     "tz": "Asia/Tokyo",     "posix": "JST-9"},
+    {"city": "Seoul",     "tz": "Asia/Seoul",     "posix": "KST-9"},
+    {"city": "Jakarta",   "tz": "Asia/Jakarta",   "posix": "WIB-7"},
+    {"city": "Manila",    "tz": "Asia/Manila",    "posix": "PST-8"},
+    {"city": "Tehran",    "tz": "Asia/Tehran",    "posix": "IRST-3:30IRDT-4:30,M3.3.0/24:00:00,M9.3.0/24:00:00"}
+  ],
+
+    "Australia": [
+    {"city": "Sydney",    "tz": "Australia/Sydney",    "posix": "AEST-10AEDT-11,M10.1.0/02:00:00,M4.1.0/03:00:00"},
+    {"city": "Melbourne", "tz": "Australia/Melbourne", "posix": "AEST-10AEDT-11,M10.1.0/02:00:00,M4.1.0/03:00:00"},
+    {"city": "Perth",     "tz": "Australia/Perth",     "posix": "AWST-8"}
+  ],
+
+  "Pacific": [
+    {"city": "Honolulu", "tz": "Pacific/Honolulu", "posix": "HST+10"},
+    {"city": "Auckland", "tz": "Pacific/Auckland", "posix": "NZST-12NZDT-13,M9.5.0/02:00:00,M4.1.0/03:00:00"},
+    {"city": "Fiji",     "tz": "Pacific/Fiji",     "posix": "FJT-12FJST-13,M11.1.0/02:00:00,M1.2.0/03:00:00"}
+  ],
+
+    "Africa": [
+    {"city": "Johannesburg","tz": "Africa/Johannesburg","posix": "SAST-2"},
+    {"city": "Cairo",       "tz": "Africa/Cairo",      "posix": "EET-2"},
+    {"city": "Nairobi",     "tz": "Africa/Nairobi",    "posix": "EAT-3"},
+    {"city": "Casablanca",  "tz": "Africa/Casablanca", "posix": "UTC+1"}
+  ],
+
+    "GMT": [
+    {"city": "GMT-12", "tz": "Etc/GMT+12", "posix": "GMT+12"},
+    {"city": "GMT-11", "tz": "Etc/GMT+11", "posix": "GMT+11"},
+    {"city": "GMT-10", "tz": "Etc/GMT+10", "posix": "GMT+10"},
+    {"city": "GMT-9",  "tz": "Etc/GMT+9",  "posix": "GMT+9"},
+    {"city": "GMT-8",  "tz": "Etc/GMT+8",  "posix": "GMT+8"},
+    {"city": "GMT-7",  "tz": "Etc/GMT+7",  "posix": "GMT+7"},
+    {"city": "GMT-6",  "tz": "Etc/GMT+6",  "posix": "GMT+6"},
+    {"city": "GMT-5",  "tz": "Etc/GMT+5",  "posix": "GMT+5"},
+    {"city": "GMT-4",  "tz": "Etc/GMT+4",  "posix": "GMT+4"},
+    {"city": "GMT-3",  "tz": "Etc/GMT+3",  "posix": "GMT+3"},
+    {"city": "GMT-2",  "tz": "Etc/GMT+2",  "posix": "GMT+2"},
+    {"city": "GMT-1",  "tz": "Etc/GMT+1",  "posix": "GMT+1"},
+    {"city": "GMT+0",  "tz": "Etc/GMT",    "posix": "GMT0"},
+    {"city": "GMT+1",  "tz": "Etc/GMT-1",  "posix": "GMT-1"},
+    {"city": "GMT+2",  "tz": "Etc/GMT-2",  "posix": "GMT-2"},
+    {"city": "GMT+3",  "tz": "Etc/GMT-3",  "posix": "GMT-3"},
+    {"city": "GMT+4",  "tz": "Etc/GMT-4",  "posix": "GMT-4"},
+    {"city": "GMT+5",  "tz": "Etc/GMT-5",  "posix": "GMT-5"},
+    {"city": "GMT+6",  "tz": "Etc/GMT-6",  "posix": "GMT-6"},
+    {"city": "GMT+7",  "tz": "Etc/GMT-7",  "posix": "GMT-7"},
+    {"city": "GMT+8",  "tz": "Etc/GMT-8",  "posix": "GMT-8"},
+    {"city": "GMT+9",  "tz": "Etc/GMT-9",  "posix": "GMT-9"},
+    {"city": "GMT+10", "tz": "Etc/GMT-10", "posix": "GMT-10"},
+    {"city": "GMT+11", "tz": "Etc/GMT-11", "posix": "GMT-11"},
+    {"city": "GMT+12", "tz": "Etc/GMT-12", "posix": "GMT-12"}
+  ]
+}

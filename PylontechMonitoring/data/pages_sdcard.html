@@ -1,0 +1,264 @@
+<h2 data-i18n="sd.title">SD Card</h2>
+
+<style>
+#sd { padding: 0; }
+#sd table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+#sd td, #sd th { border: 1px solid #ccc; padding: 6px; }
+#sd button { padding: 6px 12px; margin-left: 10px; }
+#sd-nocard { display: none; margin: 12px 0; padding: 10px; background: #fff8e1; border: 1px solid #ffd54f; color: #b56000; }
+#sd-error { display: none; margin: 12px 0; padding: 10px; background: #fdecea; border: 1px solid #ef9a9a; color: #b71c1c; }
+</style>
+
+<div id="sd">
+
+  <div id="sd-breadcrumb"></div>
+
+  <div style="margin-top: 12px;">
+    <input type="file" id="sd-file" multiple>
+    <button onclick="sdUpload()" data-i18n="sd.upload">Upload</button>
+    <button onclick="sdLoad()" data-i18n="sd.refresh">Refresh</button>
+    <button onclick="sdDeleteAll()" data-i18n="sd.delete_all">Delete all</button>
+  </div>
+
+  <progress id="sd-prog" value="0" max="100" style="display:none"></progress>
+  <span id="sd-progtext"></span>
+
+  <div id="sd-nocard" data-i18n="sd.no_card">No SD card inserted or not mounted.</div>
+  <div id="sd-error"></div>
+
+  <table id="sd-tbl"></table>
+
+</div>
+
+<script>
+// The SD card is reached through the shared File Manager endpoints. The "/sd"
+// prefix is virtual: the server strips it before touching the card, which the
+// SD library mounts at "/".
+var sdPath = "/sd";
+
+function sdParsePath(path) {
+    if (path === "/") return [];
+    return path.split('/').filter(p => p !== '');
+}
+
+function sdNavigate(path) {
+    sdPath = path;
+    sdLoad();
+}
+
+function sdShowNoCard(show) {
+    document.getElementById("sd-nocard").style.display = show ? "block" : "none";
+    document.getElementById("sd-breadcrumb").innerHTML = "";
+    document.getElementById("sd-tbl").innerHTML = "";
+}
+
+function sdShowError(msg) {
+    let el = document.getElementById("sd-error");
+    el.textContent = msg;
+    el.style.display = "block";
+}
+
+function sdClearError() {
+    let el = document.getElementById("sd-error");
+    el.textContent = "";
+    el.style.display = "none";
+}
+
+// Breadcrumb: "SD Card" is the fixed root and is not a link. Every part is
+// inserted as text and its target path lives in dataset, so a file name can
+// never inject markup or break out of the listener.
+function sdRenderBreadcrumb() {
+    let el = document.getElementById("sd-breadcrumb");
+    el.innerHTML = "";
+
+    let wrap = document.createElement("div");
+    wrap.style.marginBottom = "10px";
+
+    let root = document.createElement("span");
+    root.style.color = "#666";
+    root.textContent = t("sd.title");
+    wrap.appendChild(root);
+
+    let parts = sdParsePath(sdPath);
+    let pathParts = ["/sd"];
+    parts.slice(1).forEach(part => {
+        pathParts.push(part);
+        wrap.appendChild(document.createTextNode(" / "));
+
+        let a = document.createElement("a");
+        a.href = "#";
+        a.textContent = part;
+        a.dataset.path = pathParts.join('/');
+        a.dataset.action = "nav";
+        wrap.appendChild(a);
+    });
+
+    el.appendChild(wrap);
+}
+
+// Rows are built as DOM nodes: names, sizes and paths are set via textContent
+// or dataset, never concatenated into HTML or inline onclick strings.
+function sdRenderList(list) {
+    let tbl = document.getElementById("sd-tbl");
+    tbl.innerHTML = "";
+
+    let head = document.createElement("tr");
+    ["sd.col_name", "sd.col_size", "sd.col_action"].forEach(key => {
+        let th = document.createElement("th");
+        th.textContent = t(key);
+        head.appendChild(th);
+    });
+    tbl.appendChild(head);
+
+    list.forEach(f => {
+        let fullPath = (sdPath === "/" ? "/" : sdPath + "/") + f.name;
+        let tr = document.createElement("tr");
+
+        let nameTd = document.createElement("td");
+        if (f.type === "dir") {
+            let a = document.createElement("a");
+            a.href = "#";
+            a.textContent = f.name;
+            a.dataset.path = fullPath;
+            a.dataset.action = "nav";
+            nameTd.appendChild(a);
+        } else {
+            nameTd.textContent = f.name;
+        }
+        tr.appendChild(nameTd);
+
+        let sizeTd = document.createElement("td");
+        sizeTd.textContent = f.size + t("sd.bytes");
+        tr.appendChild(sizeTd);
+
+        let actionTd = document.createElement("td");
+        if (f.type === "file") {
+            let dl = document.createElement("a");
+            dl.href = "/fm/download?file=" + encodeURIComponent(fullPath);
+            dl.textContent = t("sd.download");
+            actionTd.appendChild(dl);
+            actionTd.appendChild(document.createTextNode(" | "));
+        }
+        let del = document.createElement("a");
+        del.href = "#";
+        del.textContent = t("sd.delete");
+        del.dataset.path = fullPath;
+        del.dataset.action = "delete";
+        actionTd.appendChild(del);
+        tr.appendChild(actionTd);
+
+        tbl.appendChild(tr);
+    });
+}
+
+function sdLoad() {
+    sdClearError();
+    // sdReady tells "no card" apart from "empty card": /fm/list returns [] for
+    // both, so the config endpoint decides which message to show. Any other
+    // failure (request, parse, server) is reported as an error, not as no-card.
+    fetch('/api/sdcard/config')
+    .then(r => r.json())
+    .then(cfg => {
+        if (cfg.sdReady === false) { sdShowNoCard(true); return; }
+        sdShowNoCard(false);
+
+        fetch('/fm/list?path=' + encodeURIComponent(sdPath))
+        .then(r => {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.json();
+        })
+        .then(list => {
+            if (!Array.isArray(list)) throw new Error(t("sd.err_invalid_response"));
+            sdRenderBreadcrumb();
+            sdRenderList(list);
+        })
+        .catch(err => sdShowError(t("sd.err_load_files") + err.message));
+    })
+    .catch(err => sdShowError(t("sd.err_load_status") + err.message));
+}
+
+async function sdUpload() {
+    let files = document.getElementById("sd-file").files;
+    if (!files.length) return;
+
+    let prog = document.getElementById("sd-prog");
+    let progtext = document.getElementById("sd-progtext");
+    prog.style.display = "inline-block";
+    prog.value = 0;
+    progtext.innerText = "0%";
+
+    for (let i = 0; i < files.length; i++) {
+        let fd = new FormData();
+        // "path" must precede "file": the server reads it when the upload part
+        // starts, so a later field would not be parsed in time.
+        fd.append("path", sdPath);
+        fd.append("file", files[i], files[i].name);
+
+        try {
+            await new Promise((resolve, reject) => {
+                let xhr = new XMLHttpRequest();
+                xhr.open("POST", "/fm/upload");
+
+                xhr.upload.onprogress = function(e) {
+                    if (e.lengthComputable) {
+                        let p = Math.round((e.loaded / e.total) * 100);
+                        prog.value = p;
+                        progtext.innerText = t("sd.progress_file")
+                            .replace("{i}", i + 1)
+                            .replace("{n}", files.length)
+                            .replace("{p}", p);
+                    }
+                };
+                xhr.onload = function() { (xhr.status === 200) ? resolve() : reject(new Error('HTTP ' + xhr.status)); };
+                xhr.onerror = function() { reject(new Error(t("sd.err_network"))); };
+                xhr.send(fd);
+            });
+        } catch (e) {
+            alert(t("sd.err_upload_failed") + e.message);
+            return;
+        }
+    }
+
+    prog.value = 100;
+    progtext.innerText = t("sd.done");
+    document.getElementById("sd-file").value = "";
+    sdLoad();
+}
+
+function sdDelete(fullPath) {
+    if (!confirm(t("sd.confirm_delete").replace("{path}", fullPath))) return;
+    fetch('/fm/delete?file=' + encodeURIComponent(fullPath))
+    .then(r => { if (!r.ok) throw new Error(r.status); sdLoad(); })
+    .catch(err => alert(t("sd.err_delete_failed") + err.message));
+}
+
+function sdDeleteAll() {
+    if (!confirm(t("sd.confirm_delete_all").replace("{path}", sdPath))) return;
+    fetch('/fm/deleteall?path=' + encodeURIComponent(sdPath))
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(res => {
+        if (res.failed > 0) alert(t("sd.err_delete_all_some").replace("{n}", res.failed));
+        sdLoad();
+    })
+    .catch(err => alert(t("sd.err_delete_all_failed") + err.message));
+}
+
+// One delegated listener per container handles every link, so no path is ever
+// interpolated into an inline handler.
+document.getElementById("sd-breadcrumb").addEventListener("click", function(e) {
+    let a = e.target.closest("a[data-action='nav']");
+    if (!a) return;
+    e.preventDefault();
+    sdNavigate(a.dataset.path);
+});
+
+document.getElementById("sd-tbl").addEventListener("click", function(e) {
+    let a = e.target.closest("a[data-action]");
+    if (!a) return;
+    e.preventDefault();
+    if (a.dataset.action === "nav") sdNavigate(a.dataset.path);
+    else if (a.dataset.action === "delete") sdDelete(a.dataset.path);
+});
+
+sdLoad();
+</script>

@@ -1,0 +1,21 @@
+<h2 data-i18n="con.title">Battery Console</h2>
+
+<div class="box">
+    <span data-i18n="con.command">command:</span>
+    <input type="text" id="cmdline" autocomplete="off">
+    <button onclick="sendCmd()" data-i18n="con.send">send</button>
+
+    <div style="margin-top:10px;">
+        <a href="#" class="cmd" onclick="quickCmd('pwr')">PWR</a>
+        <a href="#" class="cmd" onclick="quickCmd('bat 1')">BAT 1</a>
+        <a href="#" class="cmd" onclick="quickCmd('bat 2')">BAT 2</a>
+        <a href="#" class="cmd" onclick="quickCmd('bat 3')">BAT 3</a>
+        <a href="#" class="cmd" onclick="quickCmd('bat 4')">BAT 4</a>
+        <a href="#" class="cmd" onclick="quickCmd('bat 5')">BAT 5</a>
+        <a href="#" class="cmd" onclick="quickCmd('help')">help</a>
+    </div>
+</div>
+
+<textarea id="rawout" class="console-box" readonly data-i18n="con.prompt">pylon&gt;</textarea>
+
+<script src="/static_console.js"></script>
