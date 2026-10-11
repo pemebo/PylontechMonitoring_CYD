@@ -1,13 +1,25 @@
-# Pylontech Battery Monitoring via WiFi (ESP32)
+# Pylontech Battery Monitoring via CYD (Cheap Yellow Display ESP32)
 
 Forked from [irekzielinski/Pylontech-Battery-Monitoring](https://github.com/irekzielinski/Pylontech-Battery-Monitoring)
-(based on the ESP8266/D1 mini version by [hidaba](https://github.com/hidaba) and [HeldvomForst] (https://github.com/HeldvomForst)), rewritten for the ESP32.
+(based on the ESP8266/D1 mini version by [hidaba](https://github.com/hidaba) and [HeldvomForst](https://github.com/HeldvomForst), rewritten for the CYD ESP32.
 
 This project lets you monitor Pylontech **US2000B, US2000C, US3000C and US5000** batteries through their
 RS-232 console port and exposes the data over WiFi: a full web interface, MQTT (with Home Assistant
-autodiscovery), an on-device TFT touchscreen, SD card logging/export and OTA firmware updates.
+autodiscovery), on-device TFT touchscreen, SD card logging/export and OTA firmware updates.
 
 **I ACCEPT NO RESPONSIBILITY FOR ANY DAMAGE CAUSED, PROCEED AT YOUR OWN RISK**
+
+## Purpose
+Some months ago, one of my US3000C modules began generating Overvoltaje alarms to the inverter. I had no way to see what was happening and which was the problematic module.
+It was a bit difficult to use the BatteryView software to identify the module and the problem. So, I load an ESP32 with the hidaba code and employed my Homeassistant instance 
+to do a precise monitoring of the Pylontech stack. This schema help a lot, but I realized that:
+- I had two spare CYD screens
+- I don't have much experience in Arduino
+- I needed to get experience in AI assisted coding.
+
+So, adapting the code to the CYD would be a good exercise for me to understand the capabilities and limitations of AI coding, and to get used to AI tools and methodologies. As a result, 
+this project was created using OpenCode + Gentle AI, Deepseek V4.1 flash and the Big Pickle models.
+
 
 ## Features
 
@@ -38,6 +50,30 @@ autodiscovery), an on-device TFT touchscreen, SD card logging/export and OTA fir
 * Easy to modify code using Arduino IDE
 * Scheduled automatic reboot and double-buffered, 2-core FreeRTOS architecture
 
+## Images
+CYD screen
+
+<img width="320" height="180" alt="image" src="https://github.com/user-attachments/assets/de2246d2-b624-439d-a01d-d42c33a5e69c" /> <img width="320" height="180" alt="image" src="https://github.com/user-attachments/assets/d4eb628f-bd3e-4bb7-9e25-304aab9f2dc8" /> <img width="320" height="180" alt="image" src="https://github.com/user-attachments/assets/921083c8-5bef-46f9-b8a8-a9c7c0bf57c1" />
+
+Main dashboard page
+<img width="934" height="481" alt="image" src="https://github.com/user-attachments/assets/84e9134e-6345-477b-ae06-fbe87624d1e8" />
+
+Modules details page
+<img width="1029" height="799" alt="image" src="https://github.com/user-attachments/assets/8ac34a2f-83a8-4624-9da5-6e910fdda3f8" />
+
+Health details page
+<img width="1037" height="534" alt="image" src="https://github.com/user-attachments/assets/393acb75-e5b5-4b34-8a6b-76abaf5b81e5" />
+
+Screen configuration page
+<img width="1868" height="962" alt="image" src="https://github.com/user-attachments/assets/c030f42e-d3fc-4a88-96e7-111e2dc9b3b6" />
+
+Data export page
+<img width="2075" height="1068" alt="image" src="https://github.com/user-attachments/assets/36a02775-e705-431f-bb86-7e2e6917f254" />
+
+Console page
+<img width="1868" height="962" alt="image" src="https://github.com/user-attachments/assets/e957f79b-32ed-4833-b407-cfeabc74a801" />
+
+
 ## Hardware needed
 
 * **ESP32 board** — the tested hardware is a "Cheap Yellow Display" (**ESP32-2432S028R**, ESP32 + 2.8"
@@ -48,8 +84,6 @@ autodiscovery), an on-device TFT touchscreen, SD card logging/export and OTA fir
   one with all four wires present).
 * **US2000C / US3000C / US5000:** cable with an RJ45 connector (see below).
 * Optional: microSD card for logging/export, and a USB power supply.
-
-![Schematics](Schemetics.png)
 
 ## Wiring
 
@@ -150,9 +184,8 @@ PylontechMonitoring/
 ├── py_log.cpp/h              logging (serial + web)
 ├── data/                     SPIFFS web content (HTML/CSS/JS)
 ├── web/                      C++ webserver route handlers and API endpoints
-└── partitions/               pylontech_ota_spiffs.csv (dual OTA + SPIFFS)
-libraries/                    vendored Arduino libraries
-tests/                        standalone Arduino test sketches (SD card, pin scan)
+├── partitions/               pylontech_ota_spiffs.csv (dual OTA + SPIFFS)
+└── libraries/                    vendored Arduino libraries
 ```
 
 ## Battery protocol
@@ -173,5 +206,5 @@ translated client-side only for display.
 
 * Original project: [irekzielinski/Pylontech-Battery-Monitoring](https://github.com/irekzielinski/Pylontech-Battery-Monitoring)
 * ESP8266/D1 mini port: [hidaba](https://github.com/hidaba)
-* ESP32 port: [HeldvomForst] (https://github.com/HeldvomForst)
+* ESP32 port: [HeldvomForst](https://github.com/HeldvomForst)
 
